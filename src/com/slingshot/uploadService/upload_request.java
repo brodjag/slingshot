@@ -35,6 +35,7 @@ public class upload_request {
     String url;
     public upload_request(Context c){
          con=c;
+
         DatabaseHelper dh=new DatabaseHelper(con);
         url=dh.getURL();
         login=dh.getSetting("login");
