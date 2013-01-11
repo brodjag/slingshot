@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.slingshot"
+          android:versionCode="1"  android:versionName="1.0">
+
+    <supports-screens android:largeScreens="true" android:normalScreens="true" android:smallScreens="true"
+                      android:resizeable="true" android:anyDensity="true"  android:xlargeScreens="true" android:largestWidthLimitDp="320" />
+
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+
+    <uses-sdk android:minSdkVersion="8"/>
+
+    <application  android:label="@string/app_name" android:theme="@style/custom_theme" android:icon="@drawable/ic_launcher" >
+
+
+        <activity android:screenOrientation="portrait" android:name=".SplashScreenActivity"  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".settingActivity"  android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar"/>
+        <activity android:name=".addExpensActyvity" android:configChanges="orientation|keyboard" android:windowSoftInputMode="adjustPan" >
+            <intent-filter>
+
+
+                <action android:name="android.intent.action.AnCal.ACTION_MODE_NEW_APPOINTMENT" />
+                <action android:name="android.intent.action.AnCal.ACTION_MODE_EDIT_APPOINTMENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".listActivity" >
+
+
+        </activity>
+
+
+        <activity android:name="com.slingshot.vetch.widgets.DateWidget" android:label="Select date"   android:screenOrientation="portrait"
+                  android:launchMode="singleTop" android:theme="@android:style/Theme.Dialog">
+            <intent-filter>
+                <action android:name="android.intent.action.AnCal.ACTION_MODE_EDIT_SELECT_DATE_sl"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".img_zoom_Activity" android:screenOrientation="portrait" >
+
+        </activity>
+        <service android:name=".uploadService.upService">
+            <meta-data  android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
+        </service>
+    </application>
+</manifest>

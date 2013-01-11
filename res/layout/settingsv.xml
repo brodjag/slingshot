@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent" android:orientation="vertical">
+    <!--head -->
+    <LinearLayout android:background="#aaa" android:orientation="horizontal" android:layout_height="50dp" android:layout_width="fill_parent">
+        <TextView  android:textColor="#000" android:gravity="center" android:textSize="18dp" android:textStyle="bold"
+                   android:layout_height="fill_parent" android:layout_width="fill_parent" android:text="@string/settings_title" />
+    </LinearLayout>
+    <!-- end head -->
+
+    <LinearLayout android:orientation="vertical" android:background="#fff" android:layout_height="fill_parent"  android:layout_width="fill_parent">
+
+
+        <!--item server -->
+        <LinearLayout android:visibility="visible" style="@style/setting_item_parent" android:id="@+id/setting_server_item"  >
+
+            <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <TextView style="@style/setting_item_title" android:layout_weight="0" android:text="@string/server" android:lines="1" android:layout_width="wrap_content"  />
+                <TextView style="@style/setting_item_title" android:text="@string/it_restart_after_changes" android:textColor="#0f0" android:textSize="13dp" android:textStyle="normal" android:layout_width="wrap_content"  />
+            </LinearLayout>
+
+
+            <LinearLayout style="@style/setting_item_settings" android:orientation="vertical" android:layout_marginTop="5dp" android:layout_marginLeft="7dp" android:layout_marginBottom="5dp" >
+                <LinearLayout  android:layout_margin="0dp"  style="@style/setting_item_settings_item"  android:paddingBottom="0dp">
+                    <TextView android:textStyle="bold" style="@style/setting_item_settings_name" android:text="url: " android:paddingBottom="0dp" />
+                    <TextView   android:id="@+id/url_pre" style="@style/setting_item_settings_name" android:text="ku" android:paddingBottom="0dp" /> <!--http://fpat.ru/DemoEnterprise/ws/ -->
+                </LinearLayout>
+
+                <LinearLayout android:layout_margin="0dp"  style="@style/setting_item_settings_item" >
+                    <TextView android:textStyle="bold" style="@style/setting_item_settings_name"  android:text="@string/name_area" android:paddingTop="0dp" />
+                    <TextView android:id="@+id/url_area" style="@style/setting_item_settings_name" android:text="ku" android:paddingTop="0dp" /><!--1csoap -->
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+        <!--end item server -->
+
+        <!--item athorithation -->
+        <LinearLayout android:visibility="visible" android:id="@+id/setting_authofication" style="@style/setting_item_parent" >
+
+            <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                 <TextView style="@style/setting_item_title" android:text="@string/authorization" android:layout_weight="0" android:layout_height="wrap_content" android:layout_width="wrap_content" />
+                <TextView style="@style/setting_item_title" android:text="@string/it_restart_after_changes" android:textColor="#0f0" android:textSize="13dp" android:textStyle="normal" android:layout_width="wrap_content"  />
+            </LinearLayout>
+
+            <LinearLayout style="@style/setting_item_settings" >
+                  <LinearLayout style="@style/setting_item_settings_item">
+                        <TextView android:textStyle="bold" style="@style/setting_item_settings_name" android:text="@string/login" />
+                      <TextView android:id="@+id/login" style="@style/setting_item_settings_name" android:text="test" />
+                </LinearLayout>
+
+                <LinearLayout style="@style/setting_item_settings_item">
+                    <TextView android:textStyle="bold" style="@style/setting_item_settings_name"  android:text="@string/password" />
+                    <TextView android:id="@+id/password" style="@style/setting_item_settings_name"  android:password="true" android:text=""  />
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+            <LinearLayout style="@style/setting_item_settings_item">
+                <TextView style="@style/setting_item_settings_name" android:textStyle="bold"  android:text="Project:" />
+                <TextView android:id="@+id/project" style="@style/setting_item_settings_name"  android:text=""  />
+            </LinearLayout>
+        </LinearLayout>
+        <!--end item athorithation -->
+
+
+
+
+        <LinearLayout android:layout_height="0dp" android:background="#000" android:layout_weight="1" android:layout_width="fill_parent"/>
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

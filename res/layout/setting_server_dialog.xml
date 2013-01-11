@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
+
+<LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_marginRight="0dp"
+              android:layout_marginBottom="2dp" android:layout_marginLeft="0dp" android:orientation="vertical" android:gravity="center">
+
+<TextView android:layout_marginBottom="3dp" android:layout_marginLeft="0dp" android:layout_marginRight="0dp" android:textSize="16dp" android:layout_width="fill_parent" android:padding="6dp"
+              android:layout_height="wrap_content" android:background="#ddd" android:textColor="#000"
+              android:text="@string/server_settings_title" android:gravity="center" android:textStyle="bold"/>
+
+
+    <TextView android:layout_marginLeft="5dp" android:layout_marginTop="1dp" android:layout_width="fill_parent"
+              android:layout_height="wrap_content" android:text="@string/url"/>
+    <EditText android:inputType="textUri" android:id="@+id/url_pre" android:text="" android:layout_margin="5dp" android:layout_height="wrap_content"
+              android:hint="@string/enter_url" android:layout_width="fill_parent" />
+
+    <TextView android:layout_marginLeft="5dp" android:layout_marginTop="1dp" android:layout_width="fill_parent"
+              android:layout_height="wrap_content" android:text="@string/name_area"/>
+    <EditText android:id="@+id/url_area" android:inputType="textUri" android:text="" android:layout_margin="5dp" android:layout_height="wrap_content" android:hint="@string/name_area" android:layout_width="fill_parent" />
+
+
+    <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:orientation="horizontal">
+        <Button android:id="@+id/dialog_server_cancel" android:layout_margin="10dp" android:padding="5dp" android:text="@string/cansel"  android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_weight="1" />
+        <Button android:id="@+id/dialog_enter" android:layout_margin="10dp" android:padding="5dp" android:text="@string/ok"  android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_weight="1" />
+    </LinearLayout>
+</LinearLayout>
+</LinearLayout>

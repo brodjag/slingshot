@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">slingshot</string>
+
+    <!--settings -->
+    <string name="server_settings_title">Server settings</string>
+    <string name="url">URL: </string>
+    <string name="enter_url">plz enter URL to service</string>
+    <string name="name_area">TargetNamespace: </string>
+    <string name="enter_names_area">plz enter TargetNamespace</string>
+
+    <string name="cansel"> Cancel </string>
+    <string name="ok"> Enter </string>
+
+    <!--autorisation setting -->
+    <string name="authorization">Authorization</string>
+    <string name="login">Login: </string>
+    <string name="password">Password: </string>
+    <string name="enter_login">plz enter login</string>
+    <string name="enter_password">plz enter pasword</string>
+
+    <!--settings -->
+    <string name="settings_title">Settings</string>
+    <string name="server">Server</string>
+
+    <string name="it_restart_after_changes">(change does restart!)</string>
+
+    <string name="lt">\u003C</string>
+    <string name="lr">\u003e</string>
+
+</resources>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="300dp"
+              android:layout_height="fill_parent">
+
+    <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_marginRight="0dp"
+                  android:layout_marginBottom="3dp" android:layout_marginLeft="0dp" android:orientation="vertical" android:gravity="center">
+
+        <TextView android:layout_marginBottom="5dp" android:layout_marginLeft="0dp" android:layout_marginRight="0dp" android:textSize="16dp" android:layout_width="fill_parent" android:padding="6dp"
+                  android:layout_height="wrap_content" android:background="#ddd" android:textColor="#000"
+                  android:text="@string/authorization" android:gravity="center" android:textStyle="bold"/>
+
+
+        <TextView android:layout_marginLeft="5dp" android:layout_marginTop="5dp" android:layout_width="fill_parent"
+                  android:layout_height="wrap_content" android:text="@string/login"/>
+        <EditText android:inputType="textUri" android:id="@+id/d_login" android:text="" android:layout_margin="5dp" android:layout_height="wrap_content"
+                  android:hint="@string/enter_login" android:layout_width="fill_parent" />
+
+        <TextView android:layout_marginLeft="5dp" android:layout_marginTop="5dp" android:layout_width="fill_parent"
+                  android:layout_height="wrap_content" android:text="@string/password"/>
+        <EditText android:id="@+id/d_password" android:password="true" android:inputType="textUri" android:text=""
+                  android:layout_margin="5dp" android:layout_height="wrap_content" android:hint="@string/enter_password" android:layout_width="fill_parent" />
+
+        <TextView android:layout_marginLeft="5dp" android:layout_marginTop="5dp" android:layout_width="fill_parent"
+                  android:layout_height="wrap_content" android:text="Project:"/>
+        <EditText android:id="@+id/d_project"  android:inputType="text" android:text=""
+                  android:layout_margin="5dp" android:layout_height="wrap_content" android:hint="plz enter project id" android:layout_width="fill_parent" />
+
+
+        <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+            <Button android:id="@+id/dialog_cancel_auth" android:layout_margin="10dp" android:padding="5dp" android:text="@string/cansel"  android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="fill_parent"/>
+            <Button android:id="@+id/dialog_enter" android:layout_margin="10dp" android:padding="5dp" android:text="@string/ok"  android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="fill_parent"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
