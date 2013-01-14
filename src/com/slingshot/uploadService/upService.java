@@ -13,7 +13,7 @@ import android.widget.Toast;
  * User: brodjag
  * Date: 10.01.13
  * Time: 11:43
- * To change this template use File | Settings | File Templates.
+ * service to upload anything without interface ..
  */
 public class upService extends Service {
     public IBinder onBind(Intent intent) {
@@ -33,8 +33,8 @@ public class upService extends Service {
         NotificationManager   mNotificationManager =    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 // Sets an ID for the notification, so it can be updated
         int notifyID = 1;
-       loadNotification ln=new loadNotification(this,100);
-        ln.setPosition(78);
+      // loadNotification ln=new loadNotification(this,100);
+     //   ln.setPosition(78);
 
     }
 

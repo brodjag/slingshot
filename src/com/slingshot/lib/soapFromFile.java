@@ -44,7 +44,7 @@ import java.security.cert.X509Certificate;
  * User: brodjag
  * Date: 09.01.13
  * Time: 11:29
- * To change this template use File | Settings | File Templates.
+ * make soap request with expense from file on sd
  */
 
 public class soapFromFile {
@@ -59,7 +59,7 @@ public class soapFromFile {
     }
 
     public String responseString=null;
-    public Element call(String url, String soapAction,  String envelope)  {
+    public Element call(String url, String soapAction)  {
         final DefaultHttpClient httpClient=getClient(); // new DefaultHttpClient();
         Log.d("url_soap", url);
         // параметры запроса
@@ -191,7 +191,7 @@ public class soapFromFile {
         {
             return null;
         }
-    };
+    }
 
 
 }

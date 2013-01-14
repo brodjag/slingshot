@@ -15,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.slingshot.lib.DatabaseHelper;
 import com.slingshot.uploadService.upService;
+import com.slingshot.uploadService.upload_request;
+
 
 import java.io.File;
 import java.util.Calendar;
@@ -24,23 +26,25 @@ import java.util.Calendar;
  * User: brodjag
  * Date: 27.12.12
  * Time: 17:21
- * To change this template use File | Settings | File Templates.
+ * show expenses list
  */
 public class listActivity extends Activity {
     Activity con;
+    Intent service;
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         con=this;
         setContentView(R.layout.list);
         getListItems();
         setAddButton();
+        service = new Intent(con, upService.class);
     }
 
     void  setAddButton(){
         findViewById(R.id.add_item).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try { ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50);} catch (Exception e) {} ;
+                try { ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50);} catch (Exception e) {}
 
                DatabaseHelper dh=new DatabaseHelper(con);
                 dh.newExpense("","",Calendar.getInstance().getTimeInMillis(),"","");
@@ -81,7 +85,7 @@ public class listActivity extends Activity {
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    try { ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50);} catch (Exception e) {} ;
+                    try { ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50);} catch (Exception e) {}
                     Intent intent=new Intent(con,addExpensActyvity.class);
                     intent.putExtra("id",id);
                     startActivity(intent);
@@ -94,14 +98,14 @@ public class listActivity extends Activity {
             v.findViewById(R.id.remove_item).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}  ;
+                    try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
                     final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(con);
                     dlgAlert.setMessage("Remove '" + desc + "'?");
                     //dlgAlert.setTitle("App Title");
                     dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}  ;
+                            try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
                            DatabaseHelper dh=new DatabaseHelper(con);
                             dh.removeExpenseId(id);
                             dh.close();
@@ -160,8 +164,9 @@ public class listActivity extends Activity {
                 break;
             case R.id.upload:
                // new upload_request(con);
-                Intent service = new Intent(con, upService.class);
-                con.startService(service);
+                new upload_request(this);
+              //  con.stopService(service);
+              //  con.startService(service);
                 break;
 
         }

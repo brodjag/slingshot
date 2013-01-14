@@ -24,11 +24,12 @@ import java.util.Calendar;
  * User: brodjag
  * Date: 07.01.13
  * Time: 16:00
- * To change this template use File | Settings | File Templates.
+ * the request uploads expenses asynchronous
+ * and prepares file with  envelope
  */
 public class upload_request {
     Context con;
-    String fileEnvelopePath="slingshot/envrlope.soap";
+    String fileEnvelopePath="slingshot/envelope.soap";
     String login="TestTraveler";
     String password="$$apvvord";
     String project="";
@@ -47,32 +48,47 @@ public class upload_request {
 
 
     private class spinTask extends AsyncTask<Void,Void,Element> {
-        String envelope;
+       // String envelope;
+        loadNotification ln;
 
         @Override
         protected Element doInBackground(Void... voids) {
+            DatabaseHelper dh=new DatabaseHelper(con);
+            Cursor cursor=dh.getExpenseAll();
 
-            getEnvelope();
 
 
-            soapFromFile sp=new soapFromFile(fileEnvelopePath);
-            //"http://fpat.ru/DemoEnterprise/ws/1csoap.1cws"
-            Element body= sp.call("http://support.slingshotsoftware.com/webservices4test/TripExpenseCapture.asmx","http://www.slingshotsoftware.com/XmlNamespaces/WebServices/G2/PostExpenses",envelope);
-            bodyText=sp.responseString;
-            Log.d("soap", envelope);
-            return body;
+
+            for (int i=0; i<cursor.getCount(); i++){
+                cursor.moveToPosition(i);
+
+                getEnvelope(cursor);
+                ln.setPosition(i,cursor.getCount());
+                soapFromFile sp=new soapFromFile(fileEnvelopePath);
+                ln.setPosition(2*(i)+1,2*cursor.getCount());
+                 Element body= sp.call("http://support.slingshotsoftware.com/webservices4test/TripExpenseCapture.asmx","http://www.slingshotsoftware.com/XmlNamespaces/WebServices/G2/PostExpenses");
+                ln.setPosition(2*(i+1),2*cursor.getCount());
+                bodyText=sp.responseString;
+               // Log.d("soap", envelope);
+
+            }
+            cursor.close(); dh.close();
+
+            return null;
         }
 
         String bodyText="";
         // public ProgressDialog waitDialog=null;
         protected void onPreExecute(){
-            envelope= "";
+            ln=new loadNotification(con);
+          //  envelope= "";
 
             //   waitDialog= ProgressDialog.show(con, "", "Loading. Please wait...", true);
+
         }
 
         protected void onPostExecute(Element body){
-
+            ln.setUploaded();
             Log.d("soapFromFile",""+bodyText);
              Toast.makeText(con,""+bodyText,Toast.LENGTH_LONG).show();
             //  waitDialog.dismiss();
@@ -99,18 +115,18 @@ public class upload_request {
         }
     }
 
-    private void getEnvelope() {
+private void getEnvelope(Cursor cursor) {
       File file= new File(Environment.getExternalStorageDirectory(),fileEnvelopePath);
         file.delete();
         try {
             file.createNewFile();
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
         fileLib fl=new fileLib(con);
 
-fl.AppendToFile(fileEnvelopePath, "<Envelope xmlns=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+      fl.AppendToFile(fileEnvelopePath, "<Envelope xmlns=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
         "    <Body>\n" +
         "        <PostExpenses xmlns=\"http://www.slingshotsoftware.com/XmlNamespaces/WebServices/G2\">\n" +
         "            <Project>" + project + "</Project>\n" +
@@ -118,25 +134,27 @@ fl.AppendToFile(fileEnvelopePath, "<Envelope xmlns=\"http://schemas.xmlsoap.org/
         "            <Password>" + password + "</Password>\n" +
         "            <Data>\n" +
         "                <Expenses>\n");
-                             getEnvelopeExpense();
+                             getEnvelopeExpense(cursor);
 
-fl.AppendToFile(fileEnvelopePath,   "                </Expenses>\n" +
+      fl.AppendToFile(fileEnvelopePath,   "                </Expenses>\n" +
             "            </Data>\n" +
             "        </PostExpenses>\n" +
             "    </Body>\n" +
-            "</Envelope>");
+            "</Envelope>\n\n");
 
-    }
+}
 
-   String getEnvelopeExpense(){
+   String getEnvelopeExpense(Cursor c){
     String Expense="";
 
-       DatabaseHelper dh=new DatabaseHelper(con);
-       Cursor c=dh.getExpenseAll();
+      // DatabaseHelper dh=new DatabaseHelper(con);
+      // Cursor c=dh.getExpenseAll();
 
-       for (int i=0; i<c.getCount(); i++){
+   //    for (int i=0; i<c.getCount(); i++){
+
 
           String id= c.getString(0);
+       Log.d("upload id=",id);
           String Code=c.getString(1);
 
            Calendar calendar=Calendar.getInstance();
@@ -164,13 +182,15 @@ fl.AppendToFile(fileEnvelopePath,   "                </Expenses>\n" +
            fl.AppendToFile(fileEnvelopePath,"                        </Images>\n" +
                                             "                    </Expense>\n");
 
-       }
+     //  }
      //  Log.d("Expense",Expense);
-       c.close(); dh.close();
+     //  c.close(); dh.close();
        return Expense;
    }
 
 
+
+    //make <image>
    String getImgs(String id_expense){
        String path=Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActyvity.mainFolder+"/"+id_expense;
        Log.d("ImgBase64",path);
@@ -192,6 +212,7 @@ fl.AppendToFile(fileEnvelopePath,   "                </Expenses>\n" +
     return res;
    }
 
+    //code images to Base64
    String getImagesBase64(String path){      /*
        Bitmap bm = BitmapFactory.decodeFile(path);
        ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -203,7 +224,7 @@ fl.AppendToFile(fileEnvelopePath,   "                </Expenses>\n" +
        try {
            encodedImage = Base64.encodeToString(IOUtil.readFile(f), Base64.DEFAULT);
        } catch (IOException e) {
-           e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+           e.printStackTrace();
        }
        //  Base64.encode(b, Base64.NO_WRAP);
 

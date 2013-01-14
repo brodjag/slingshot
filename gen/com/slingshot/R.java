@@ -15,7 +15,7 @@ public final class R {
         public static final int menu_full_bg=0x7f020003;
         public static final int menu_text=0x7f020004;
         public static final int setting1=0x7f020001;
-        public static final int test=0x7f020002;
+        public static final int upload=0x7f020002;
     }
     public static final class id {
         public static final int add_expence_img_list=0x7f070005;
@@ -61,10 +61,12 @@ public final class R {
         public static final int img_zoom=0x7f030003;
         public static final int list=0x7f030004;
         public static final int notification_load=0x7f030005;
-        public static final int setting_server_dialog=0x7f030006;
-        public static final int settings_auth_dialog=0x7f030007;
-        public static final int settingsv=0x7f030008;
-        public static final int splash_screen=0x7f030009;
+        public static final int notification_loaded_message=0x7f030006;
+        public static final int setting_server_dialog=0x7f030007;
+        public static final int settings_auth_dialog=0x7f030008;
+        public static final int settingsv=0x7f030009;
+        public static final int splash_screen=0x7f03000a;
+        public static final int upload_report=0x7f03000b;
     }
     public static final class menu {
         public static final int menu=0x7f060000;

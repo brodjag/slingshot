@@ -52,6 +52,7 @@
         <activity android:name=".img_zoom_Activity" android:screenOrientation="portrait" >
 
         </activity>
+        <activity android:name=".uploadService.uploadReportActivity"/>
         <service android:name=".uploadService.upService">
             <meta-data  android:name="android.support.PARENT_ACTIVITY" android:value=".MainActivity"/>
         </service>

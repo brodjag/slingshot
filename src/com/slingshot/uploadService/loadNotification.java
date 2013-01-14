@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 import com.slingshot.R;
 import com.slingshot.listActivity;
@@ -15,7 +14,7 @@ import com.slingshot.listActivity;
  * User: brodjag
  * Date: 10.01.13
  * Time: 18:21
- * To change this template use File | Settings | File Templates.
+ *show notification with loading progress and results
  */
 public class loadNotification {
     Context con;
@@ -23,10 +22,13 @@ public class loadNotification {
     Notification notification;
     int maxPosition;
 
-    public class startClass extends listActivity{};
+    public class startClass extends listActivity{
+        startClass(){
+            super();}
+    }
 
-    public loadNotification(Context c, int maxPos){
-        con=c;  maxPosition=maxPos;
+    public loadNotification(Context c ){
+        con=c;  //maxPosition=maxPos;
 
         createNofification();
 
@@ -34,6 +36,7 @@ public class loadNotification {
 
     void createNofification(){
         mNotifyManager =    (NotificationManager) con.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotifyManager.cancel(1);
 
         RemoteViews contentView=(new RemoteViews(con.getPackageName(),R.layout.notification_load));
 
@@ -45,26 +48,32 @@ public class loadNotification {
         //   mNotifyManager.notify(0,mBuilder.build());
         notification = new Notification(R.drawable.ic_launcher, "Slingshot", System.currentTimeMillis());
         notification.contentView=contentView;
-        notification.contentIntent= PendingIntent.getActivity( con, 0,  new Intent(con,startClass.class),PendingIntent.FLAG_UPDATE_CURRENT);;
+        notification.contentIntent= PendingIntent.getActivity( con, 0,  new Intent(con,startClass.class),PendingIntent.FLAG_UPDATE_CURRENT);
 
         contentView.setProgressBar(R.id.progress_bar,maxPosition,0,true);
         mNotifyManager.notify(0,notification);
     }
 
-    public void setPosition(int pos){
+    public void setPosition(int pos,int maxPos){
+        maxPosition=maxPos;
         notification.contentView.setProgressBar(R.id.progress_bar,maxPosition,pos,false);
         mNotifyManager.notify(0,notification);
     }
 
     public void setUploaded(){
+        /*
         NotificationCompat.Builder  mBuilder = new NotificationCompat.Builder(con);
         mBuilder.setContentTitle("Slingshot downloaded")
                 .setContentText("uloaded 5 items")
                 .setSmallIcon(R.drawable.ic_launcher);
-        mBuilder.setContentIntent(PendingIntent.getActivity( con, 0,  new Intent(con,startClass.class),PendingIntent.FLAG_UPDATE_CURRENT));
-       //notification= new Notification(R.drawable.ic_launcher, "Slingshot: Uploaded", System.currentTimeMillis());
-      // notification.contentIntent= PendingIntent.getActivity( con, 0,  new Intent(con,MyActivity.class),PendingIntent.FLAG_UPDATE_CURRENT);
-       mNotifyManager.notify(0,mBuilder.build());
+        mBuilder.setContentIntent(PendingIntent.getActivity(con, 0, new Intent(con, startClass.class), PendingIntent.FLAG_UPDATE_CURRENT));
+      */
+       notification= new Notification(R.drawable.ic_launcher, "Slingshot: Uploaded", System.currentTimeMillis());
+        notification.contentView=(new RemoteViews(con.getPackageName(),R.layout.notification_loaded_message));
+       notification.contentIntent= PendingIntent.getActivity( con, 0,  new Intent(con,uploadReportActivity.class),PendingIntent.FLAG_UPDATE_CURRENT);
+
+       mNotifyManager.notify(0,notification);
+
     }
 
 

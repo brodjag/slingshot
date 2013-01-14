@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent" android:layout_height="fill_parent"
+        android:orientation="vertical" android:padding="10dp">
+
+    <TextView android:textSize="16dp" android:gravity="left" android:textColor="#222"  android:textStyle="bold" android:text="Slingshot Uploaded" android:layout_height="wrap_content" android:layout_width="fill_parent"/>
+    <TextView android:textSize="12dp" android:textColor="#222" android:gravity="left"  android:text="Click to view report" android:layout_height="fill_parent" android:layout_width="fill_parent"/>
+
+</LinearLayout>
