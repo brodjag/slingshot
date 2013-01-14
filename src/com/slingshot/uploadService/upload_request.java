@@ -25,7 +25,7 @@ import java.util.Calendar;
  * Date: 07.01.13
  * Time: 16:00
  * the request uploads expenses asynchronous
- * and prepares file with  envelope
+ * and  prepares file with  envelope
  */
 public class upload_request {
     Context con;
