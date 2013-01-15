@@ -319,7 +319,7 @@ public Cursor getExpenseById(String id)
     public Cursor getExpenseAll()
     {
         SQLiteDatabase db=this.getReadableDatabase();
-        Cursor cur=db.rawQuery("SELECT * from expense",new String [] {});
+        Cursor cur=db.rawQuery("SELECT * from expense ORDER BY id DESC",new String [] {});
         cur.moveToFirst();
         db.close();
         return cur;

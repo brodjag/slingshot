@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 import com.slingshot.lib.DatabaseHelper;
 import com.slingshot.lib.fileLib;
 import com.slingshot.lib.soap;
@@ -72,6 +73,7 @@ public class SplashScreenActivity extends Activity {
         }
 
         protected void onPostExecute(Element body){
+            if(!fileLib.isSDCardMounted()){    Toast.makeText(con, "Cd card isn't connected", Toast.LENGTH_LONG).show(); }
 
            Log.d("soap",""+bodyText);
           //  Toast.makeText(con,""+bodyText,Toast.LENGTH_LONG).show();

@@ -114,5 +114,14 @@ public class fileLib {
         }catch (Exception e){}
     }
 
+
+
+ static public boolean isSDCardMounted() {
+        boolean b=android.os.Environment.getExternalStorageState().equals( android.os.Environment.MEDIA_MOUNTED);
+//        Toast.makeText(con,"сд-карта не подключена",Toast.LENGTH_LONG).show();
+
+        return b;
+    }
+
 }
 

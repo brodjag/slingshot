@@ -6,11 +6,13 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import com.slingshot.lib.DatabaseHelper;
+import com.slingshot.lib.fileLib;
 import com.slingshot.lib.saveFile;
 import com.slingshot.vetch.ancal.Prefs;
 import com.slingshot.vetch.widgets.DateWidget;
@@ -27,32 +29,25 @@ import java.util.List;
  * User: brodjag
  * Date: 26.12.12
  * Time: 0:13
- * To change this template use File | Settings | File Templates.
+ * create edit view
  */
-public class addExpensActyvity extends Activity {
+public class addExpensActyvity extends Activity  {
     Activity con;
     String id_expense="-1";
 public static  String mainFolder="slingshot";
     String fileName="1.jpg";
     Calendar dateStart=Calendar.getInstance();
-
     String ExpenseCode ="";
 
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         con=this;
-        try{
-        id_expense=getIntent().getStringExtra("id");
-        }catch (Exception e){}
+        try{   id_expense=getIntent().getStringExtra("id"); }catch (Exception e){}
         setFileName();
         setContentView(R.layout.add_expese);
-
        initSpiner();
-
-
         setButtons();
-
         setValues();
     }
 
@@ -62,14 +57,8 @@ public static  String mainFolder="slingshot";
             public void onClick(View view) {
                 Prefs prefs;
                 prefs=new Prefs(con);
-
-                //  DateWidget.Open(con, false,dateStart, prefs.iFirstDayOfWeek);
-                //Long cal_ms= getIntent().getLongExtra("date",0);
                 dateStart= Calendar.getInstance();
-                // dateStart.setTimeInMillis(cal_ms);
-
                 DateWidget.Open(con, false, dateStart, prefs.iFirstDayOfWeek);
-
 
             }
         });
@@ -77,11 +66,12 @@ public static  String mainFolder="slingshot";
         findViewById(R.id.add_img).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
+                if(!fileLib.isSDCardMounted()){Toast.makeText(con,"Cd card isn't connected", Toast.LENGTH_LONG).show(); return;}
                 //  int CAMERA_PIC_REQUEST = 1337;
                 // startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder+"/"+ get_id_expense()+"/"+fileName);
+                File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder+"/imgs/"+ get_id_expense()+"/"+fileName);
                 Log.d("Environment.getExternalStorageDirectory()",""+Environment.getExternalStorageDirectory().getAbsolutePath());
                 mCurrentPhotoPath=file.getAbsolutePath();
                 Uri outputFileUri = Uri.fromFile(file);
@@ -92,13 +82,13 @@ public static  String mainFolder="slingshot";
         });
 
 
-
-
-
         //show images button
         findViewById(R.id.wach_img).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
+                if(!fileLib.isSDCardMounted()){Toast.makeText(con,"Cd card isn't connected", Toast.LENGTH_LONG).show(); return;}
+
                 if(getFileCount()<1){ Toast.makeText(getBaseContext(),"no images yet",Toast.LENGTH_LONG).show(); return;}
 
                 Intent intent=new Intent(getBaseContext(),img_zoom_Activity.class);
@@ -160,7 +150,7 @@ public static  String mainFolder="slingshot";
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                //To change body of implemented methods use File | Settings | File Templates.
+
             }
         });
     }
@@ -184,7 +174,6 @@ public static  String mainFolder="slingshot";
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
 
-      //Log.d("requestCode","="+requestCode);
       //requst from calendar
       if (requestCode==111){
         Bundle extras = getIntentExtras(data);
@@ -208,13 +197,7 @@ public static  String mainFolder="slingshot";
       //request from camera
         if(requestCode==1) {
       if(resultCode==-1) {
-             /*
-               View v= con.getLayoutInflater().inflate(R.layout.add_expence_img,null);
-                ImageView img=   (ImageView) v.findViewById(R.id.img_item);
-               ((LinearLayout) findViewById(R.id.add_expence_img_list)).addView(v);
-                addExpensImages im=new addExpensImages(con);
-                im.scaleImage(img,Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder+"/"+id_expense+"/"+fileName);
-             */
+
           Toast.makeText(this, "Picture is appended", Toast.LENGTH_LONG).show();
             setFileName();
           ((Button) findViewById(R.id.wach_img)).setText("watch images ("+getFileCount()+")");
@@ -227,8 +210,10 @@ public static  String mainFolder="slingshot";
    void setFileName(){
        File mainFolderF=  new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder);
        if(!mainFolderF.exists()){mainFolderF.mkdir();}
+       File imgFolderF=  new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder+"/imgs");
+       if(!imgFolderF.exists()){imgFolderF.mkdir();}
 
-       File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder+"/"+get_id_expense());
+       File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder+"/imgs/"+get_id_expense());
        if(!root.exists()){root.mkdir();}
        File[] ImgsInIdFolder=root.listFiles();
        if (ImgsInIdFolder==null){return;}
@@ -290,12 +275,9 @@ public static  String mainFolder="slingshot";
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             saveValues();
-
             finish();
-
             startActivity(new Intent(con,listActivity.class));
         }
         return super.onKeyDown(keyCode, event);
@@ -307,7 +289,10 @@ public static  String mainFolder="slingshot";
         File mainFolderF=  new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder);
         if(!mainFolderF.exists()){mainFolderF.mkdir();}
 
-        File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder+"/"+get_id_expense());
+        File imgs=  new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder+"/imgs");
+        if(!imgs.exists()){imgs.mkdir();}
+
+        File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder+"/imgs/"+get_id_expense());
         if(!root.exists()){root.mkdir();}
         File[] ImgsInIdFolder=root.listFiles();
         if (ImgsInIdFolder==null){return 0;}
@@ -319,13 +304,11 @@ public static  String mainFolder="slingshot";
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
+        inflater.inflate(R.menu.edit_expense_menu, menu);
         return true;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-
         switch (item.getItemId()) {
             case R.id.setting:
                 saveValues();

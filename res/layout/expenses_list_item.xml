@@ -19,7 +19,7 @@
 
             <!--descraption -->
             <TextView android:id="@+id/list_description" android:maxLines="3" android:layout_height="wrap_content" android:layout_width="fill_parent"
-                      android:text="Some food in  road cafe" />
+                      android:text="Some food in  road cafe"/>
             <!--end descraption -->
         </LinearLayout>
         <!--end first col -->
@@ -38,4 +38,6 @@
 
     </LinearLayout>
     <!--item end -->
+
+
 </LinearLayout>

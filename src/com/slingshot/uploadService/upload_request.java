@@ -1,5 +1,6 @@
 package com.slingshot.uploadService;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -25,7 +26,7 @@ import java.util.Calendar;
  * Date: 07.01.13
  * Time: 16:00
  * the request uploads expenses asynchronous
- * and  prepares file with  envelope
+ * and  prepares file with envelope
  */
 public class upload_request {
     Context con;
@@ -36,20 +37,22 @@ public class upload_request {
     String url;
     public upload_request(Context c){
          con=c;
-
+        if(!fileLib.isSDCardMounted()){Toast.makeText(con,"Cd card isn't connected", Toast.LENGTH_LONG).show(); return;}
         DatabaseHelper dh=new DatabaseHelper(con);
         url=dh.getURL();
         login=dh.getSetting("login");
         password=dh.getSetting("password");
         project=dh.getSetting("Project");
         dh.close();
+
         new spinTask().execute();
+
     }
 
 
-    private class spinTask extends AsyncTask<Void,Void,Element> {
+    private class spinTask extends AsyncTask<Void,Integer,Element> {
        // String envelope;
-        loadNotification ln;
+     //   loadNotification ln;
 
         @Override
         protected Element doInBackground(Void... voids) {
@@ -57,17 +60,16 @@ public class upload_request {
             Cursor cursor=dh.getExpenseAll();
 
 
-
-
             for (int i=0; i<cursor.getCount(); i++){
                 cursor.moveToPosition(i);
-
+                publishProgress(2*i);
                 getEnvelope(cursor);
-                ln.setPosition(i,cursor.getCount());
+              //  ln.setPosition(i,cursor.getCount());
                 soapFromFile sp=new soapFromFile(fileEnvelopePath);
-                ln.setPosition(2*(i)+1,2*cursor.getCount());
+                publishProgress(2*(i)+1);
+               // ln.setPosition(2*(i)+1,2*cursor.getCount());
                  Element body= sp.call("http://support.slingshotsoftware.com/webservices4test/TripExpenseCapture.asmx","http://www.slingshotsoftware.com/XmlNamespaces/WebServices/G2/PostExpenses");
-                ln.setPosition(2*(i+1),2*cursor.getCount());
+              //  ln.setPosition(2*(i+1),2*cursor.getCount());
                 bodyText=sp.responseString;
                // Log.d("soap", envelope);
 
@@ -78,17 +80,31 @@ public class upload_request {
         }
 
         String bodyText="";
+        ProgressDialog dialog=null;
         // public ProgressDialog waitDialog=null;
+        @Override
         protected void onPreExecute(){
-            ln=new loadNotification(con);
-          //  envelope= "";
-
+            DatabaseHelper dh=new DatabaseHelper(con);
+            Cursor cursor=dh.getExpenseAll(); dh.close();
+         //   ln=new loadNotification(con);
             //   waitDialog= ProgressDialog.show(con, "", "Loading. Please wait...", true);
+            dialog = new ProgressDialog(con);
+            dialog.setMessage("Uploading...");
+            dialog.setIndeterminate(false);
+            dialog.setTitle("UPLOADING");
+            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            dialog.setProgress(0);
+            dialog.setMax(cursor.getCount()*2);
+            dialog.setCancelable(false);
+            dialog.setSecondaryProgress(0);
+            dialog.show();
 
+            cursor.close();
         }
-
+        @Override
         protected void onPostExecute(Element body){
-            ln.setUploaded();
+            dialog.dismiss();
+           // ln.setUploaded();
             Log.d("soapFromFile",""+bodyText);
              Toast.makeText(con,""+bodyText,Toast.LENGTH_LONG).show();
             //  waitDialog.dismiss();
@@ -112,17 +128,24 @@ public class upload_request {
                // showDailog("Error connection to server ");
 
             }
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... value)
+        {
+            dialog.setProgress(value[0]);
+            dialog.setProgressNumberFormat("");
+            super.onProgressUpdate(value);
+            //Toast.makeText(con,"val="+value[0],Toast.LENGTH_SHORT).show();
+
         }
     }
 
 private void getEnvelope(Cursor cursor) {
       File file= new File(Environment.getExternalStorageDirectory(),fileEnvelopePath);
-        file.delete();
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        if (file.exists()){file.delete();}
+        try {     file.createNewFile();} catch (IOException e) {e.printStackTrace();}
 
         fileLib fl=new fileLib(con);
 
@@ -192,7 +215,7 @@ private void getEnvelope(Cursor cursor) {
 
     //make <image>
    String getImgs(String id_expense){
-       String path=Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActyvity.mainFolder+"/"+id_expense;
+       String path=Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActyvity.mainFolder+"/imgs/"+id_expense;
        Log.d("ImgBase64",path);
        File root=new File(path);
        if(!root.exists()){root.mkdir();}

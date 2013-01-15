@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.slingshot.lib.DatabaseHelper;
+import com.slingshot.lib.fileLib;
 import com.slingshot.uploadService.upService;
 import com.slingshot.uploadService.upload_request;
 
@@ -44,7 +45,9 @@ public class listActivity extends Activity {
         findViewById(R.id.add_item).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try { ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50);} catch (Exception e) {}
+
+                try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
+                if(!fileLib.isSDCardMounted()){Toast.makeText(con,"Cd card isn't connected", Toast.LENGTH_LONG).show(); return;}
 
                DatabaseHelper dh=new DatabaseHelper(con);
                 dh.newExpense("","",Calendar.getInstance().getTimeInMillis(),"","");
@@ -86,6 +89,8 @@ public class listActivity extends Activity {
                 @Override
                 public void onClick(View view) {
                     try { ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50);} catch (Exception e) {}
+                    if(fileLib.isSDCardMounted()){}else {Toast.makeText(con,"Cd card isn't connected", Toast.LENGTH_LONG).show(); return;}
+
                     Intent intent=new Intent(con,addExpensActyvity.class);
                     intent.putExtra("id",id);
                     startActivity(intent);
@@ -99,6 +104,8 @@ public class listActivity extends Activity {
                 @Override
                 public void onClick(View view) {
                     try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
+                    if(!fileLib.isSDCardMounted()){Toast.makeText(con,"Cd card isn't connected", Toast.LENGTH_LONG).show(); return;}
+
                     final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(con);
                     dlgAlert.setMessage("Remove '" + desc + "'?");
                     //dlgAlert.setTitle("App Title");

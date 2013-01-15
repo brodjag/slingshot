@@ -71,7 +71,7 @@ public class img_zoom_Activity extends Activity {
 void setImg(){
 
     //Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActyvity.mainFolder+"/"+id_expense+"/"
-    String path=""+Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActyvity.mainFolder+"/"+id_expense+"/"+ ImgsInIdFolder[imageFileId].getName();
+    String path=""+Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActyvity.mainFolder+"/imgs/"+id_expense+"/"+ ImgsInIdFolder[imageFileId].getName();
     Log.d("path",path) ;
     Bitmap bitmap = BitmapFactory.decodeFile(path);
 
@@ -98,7 +98,10 @@ void     setImgArray(){
     File mainFolderF=  new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActyvity.mainFolder);
     if(!mainFolderF.exists()){mainFolderF.mkdir();}
 
-    File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActyvity.mainFolder+"/"+id_expense);
+    File imgs=  new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActyvity.mainFolder+"/imgs");
+    if(!imgs.exists()){imgs.mkdir();}
+
+    File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActyvity.mainFolder+"/imgs/"+id_expense);
     if(!root.exists()){root.mkdir();}
    ImgsInIdFolder=root.listFiles();
     if (ImgsInIdFolder==null){return;}
