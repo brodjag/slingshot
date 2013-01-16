@@ -28,4 +28,7 @@
     <string name="lt">\u003C</string>
     <string name="lr">\u003e</string>
 
+    <!--add expense -->
+    <string name="Select_expense_code">Select expense code</string>
+
 </resources>

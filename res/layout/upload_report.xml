@@ -14,5 +14,5 @@
     <!-- end head -->
 
 
-     <TextView android:text="doesn't work yet..." android:layout_height="wrap_content" android:layout_width="fill_parent"/>
+     <EditText android:singleLine="false" android:inputType="textMultiLine" android:id="@+id/uploadReport" android:gravity="top" android:text="" android:layout_height="fill_parent" android:layout_width="fill_parent"/>
 </LinearLayout>

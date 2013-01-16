@@ -304,6 +304,8 @@ public String getSetting(String value){
    }
 
 
+
+
 /**************************************
  * expenses
   ***************************/
@@ -389,6 +391,7 @@ public void setExpense(String valueId, String code,long date,String description,
        // try{
        // Log.d("getMaxIdExpense1", "count="+cur.getCount()) ;
             maxId=cur.getInt(0);//}catch (Exception e){}
+        cur.close();
         db.close();
         return maxId;
     }

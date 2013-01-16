@@ -8,6 +8,7 @@ import android.os.Vibrator;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
+import com.slingshot.add_expense_view.addExpensActivity;
 import com.slingshot.lib.DatabaseHelper;
 
 
@@ -149,7 +150,7 @@ public void myBackFunction(){
 
     if (back==backToListExpense){startActivity(new Intent(con, listActivity.class));}
     if (back==backToEditExpense){
-        Intent intent=new Intent(con,addExpensActyvity.class);
+        Intent intent=new Intent(con,addExpensActivity.class);
         intent.putExtra("id",getIntent().getStringExtra("id_expense"));
         startActivity(intent);
     }
@@ -160,9 +161,9 @@ public void myBackFunction(){
    // Toast.makeText(con,"переход на нужный экран",Toast.LENGTH_SHORT).show();
 }
 
-static int backToListExpense=1;
-static int backToEditExpense=2;
-static int backToSplash=3;
+public static int backToListExpense=1;
+public static int backToEditExpense=2;
+public static int backToSplash=3;
 }
 
 

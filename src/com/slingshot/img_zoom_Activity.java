@@ -13,6 +13,7 @@ import android.view.ViewManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.slingshot.add_expense_view.addExpensActivity;
 
 import java.io.File;
 
@@ -40,7 +41,7 @@ public class img_zoom_Activity extends Activity {
         setImgArray();
         if(ImgsInIdFolder==null){   Toast.makeText(this,"no imgs for this expense",Toast.LENGTH_LONG).show(); } else{
           try{  setImg();}catch (Exception e){}
-            ((TextView) findViewById(R.id.image_title)).setText("image #"+(imageFileId+1)+" from "+ImgsInIdFolder.length);
+            ((TextView) findViewById(R.id.image_title)).setText("View Receipt\n(page "+(imageFileId+1)+" of "+ImgsInIdFolder.length+")");
 
             findViewById(R.id.next_img).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -71,7 +72,7 @@ public class img_zoom_Activity extends Activity {
 void setImg(){
 
     //Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActyvity.mainFolder+"/"+id_expense+"/"
-    String path=""+Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActyvity.mainFolder+"/imgs/"+id_expense+"/"+ ImgsInIdFolder[imageFileId].getName();
+    String path=""+Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/imgs/"+id_expense+"/"+ ImgsInIdFolder[imageFileId].getName();
     Log.d("path",path) ;
     Bitmap bitmap = BitmapFactory.decodeFile(path);
 
@@ -95,13 +96,13 @@ void setImg(){
 
  File[] ImgsInIdFolder=null;
 void     setImgArray(){
-    File mainFolderF=  new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActyvity.mainFolder);
+    File mainFolderF=  new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder);
     if(!mainFolderF.exists()){mainFolderF.mkdir();}
 
-    File imgs=  new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActyvity.mainFolder+"/imgs");
+    File imgs=  new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/imgs");
     if(!imgs.exists()){imgs.mkdir();}
 
-    File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActyvity.mainFolder+"/imgs/"+id_expense);
+    File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/imgs/"+id_expense);
     if(!root.exists()){root.mkdir();}
    ImgsInIdFolder=root.listFiles();
     if (ImgsInIdFolder==null){return;}

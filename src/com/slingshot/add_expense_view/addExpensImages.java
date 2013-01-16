@@ -1,4 +1,4 @@
-package com.slingshot;
+package com.slingshot.add_expense_view;
 
 import android.app.Activity;
 import android.graphics.Bitmap;

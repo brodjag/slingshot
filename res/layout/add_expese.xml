@@ -11,12 +11,12 @@
     <!-- end head -->
 
 
-<ScrollView android:layout_width="fill_parent" android:layout_height="1dp" android:layout_weight="1">
-    <LinearLayout android:orientation="vertical" android:layout_height="wrap_content"
+
+    <LinearLayout android:orientation="vertical" android:layout_height="wrap_content"  android:layout_weight="1"
                   android:layout_width="fill_parent">
         <!--type & date -->
         <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:orientation="horizontal">
-            <Spinner android:id="@+id/spinner" android:layout_weight="1" android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_margin="5dp" />
+            <Spinner android:id="@+id/spinner" android:layout_weight="1" android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_margin="5dp" android:drawSelectorOnTop="true" android:prompt="@string/Select_expense_code" />
             <Button android:id="@+id/select_date" android:text="26.12.2012" android:layout_height="fill_parent" android:layout_width="100dp" android:layout_margin="5dp"/>
         </LinearLayout>
         <!--end type & date -->
@@ -25,14 +25,13 @@
         <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:orientation="horizontal">
             <EditText android:id="@+id/description" android:layout_margin="5dp" android:layout_width="1dp" android:layout_weight="1" android:layout_height="wrap_content"
                       android:hint="description" android:inputType="text" />
-            <EditText android:id="@+id/amount" android:layout_margin="5dp" android:layout_width="100dp" android:layout_height="wrap_content"
+            <EditText android:singleLine="false" android:id="@+id/amount" android:layout_margin="5dp" android:layout_width="100dp" android:layout_height="wrap_content"
                       android:hint="amount" android:inputType="numberDecimal" />
         </LinearLayout>
         <!--end descraption & amount -->
 
 
-    <LinearLayout android:orientation="vertical" android:id="@+id/add_expence_img_list" android:layout_height="wrap_content"
-                  android:layout_width="fill_parent"/>
+
 
         <LinearLayout android:orientation="horizontal" android:id="@+id/add_expence_img_list" android:layout_height="wrap_content"
                       android:layout_width="fill_parent">
@@ -41,7 +40,20 @@
         <Button android:id="@+id/add_img" android:layout_weight="1" android:layout_margin="5dp" android:layout_height="wrap_content"
                 android:layout_width="fill_parent" android:text="add image"/>
          </LinearLayout>
+
+
+
+
     </LinearLayout>
-</ScrollView>
+
+
+
+
+
+    <LinearLayout  android:background="#aaa" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/save" android:text="Save" android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="fill_parent" android:layout_margin="5dp"/>
+        <Button android:text="New expense" android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="fill_parent" android:layout_margin="5dp"/>
+    </LinearLayout>
+
 
 </LinearLayout>

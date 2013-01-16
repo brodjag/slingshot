@@ -1,5 +1,6 @@
 package com.slingshot.uploadService;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
@@ -7,8 +8,11 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewManager;
 import android.widget.Toast;
-import com.slingshot.addExpensActyvity;
+import com.slingshot.R;
+import com.slingshot.add_expense_view.addExpensActivity;
 import com.slingshot.lib.DatabaseHelper;
 import com.slingshot.lib.fileLib;
 import com.slingshot.lib.soapFromFile;
@@ -34,12 +38,15 @@ public class upload_request {
     String login="TestTraveler";
     String password="$$apvvord";
     String project="";
-    String url;
+    String url="";
+    String nameArea="";
+
     public upload_request(Context c){
          con=c;
         if(!fileLib.isSDCardMounted()){Toast.makeText(con,"Cd card isn't connected", Toast.LENGTH_LONG).show(); return;}
         DatabaseHelper dh=new DatabaseHelper(con);
         url=dh.getURL();
+        nameArea=dh.getSetting("url_area");
         login=dh.getSetting("login");
         password=dh.getSetting("password");
         project=dh.getSetting("Project");
@@ -50,9 +57,11 @@ public class upload_request {
     }
 
 
-    private class spinTask extends AsyncTask<Void,Integer,Element> {
+private class spinTask extends AsyncTask<Void,Integer,Element> {
        // String envelope;
      //   loadNotification ln;
+       postCallUpload postUpl;
+
 
         @Override
         protected Element doInBackground(Void... voids) {
@@ -62,13 +71,17 @@ public class upload_request {
 
             for (int i=0; i<cursor.getCount(); i++){
                 cursor.moveToPosition(i);
+
                 publishProgress(2*i);
                 getEnvelope(cursor);
               //  ln.setPosition(i,cursor.getCount());
                 soapFromFile sp=new soapFromFile(fileEnvelopePath);
                 publishProgress(2*(i)+1);
                // ln.setPosition(2*(i)+1,2*cursor.getCount());
-                 Element body= sp.call("http://support.slingshotsoftware.com/webservices4test/TripExpenseCapture.asmx","http://www.slingshotsoftware.com/XmlNamespaces/WebServices/G2/PostExpenses");
+                 Element body= sp.call(url,nameArea+"/PostExpenses");
+
+               boolean s=  postUpl.mkItem(body, cursor.getString(0),cursor.getString(3),sp.responseString);
+               if(s){publishProgress(2*(i)+1, Integer.parseInt(cursor.getString(0)));}
               //  ln.setPosition(2*(i+1),2*cursor.getCount());
                 bodyText=sp.responseString;
                // Log.d("soap", envelope);
@@ -84,6 +97,10 @@ public class upload_request {
         // public ProgressDialog waitDialog=null;
         @Override
         protected void onPreExecute(){
+            postUpl=new  postCallUpload(con);
+            //remove old log file
+            fileLib fl=new fileLib(con);  fl.removeAppendedFile(addExpensActivity.mainFolder+"/"+postCallUpload.reportFile);
+
             DatabaseHelper dh=new DatabaseHelper(con);
             Cursor cursor=dh.getExpenseAll(); dh.close();
          //   ln=new loadNotification(con);
@@ -104,30 +121,14 @@ public class upload_request {
         @Override
         protected void onPostExecute(Element body){
             dialog.dismiss();
-           // ln.setUploaded();
-            Log.d("soapFromFile",""+bodyText);
-             Toast.makeText(con,""+bodyText,Toast.LENGTH_LONG).show();
+          // ((Activity) con).finish();
+           // con.startActivity(new Intent(con,listActivity.class));
+            postUpl.postLoadingDialog();
+             //con.startActivity(new Intent(con, uploadReportActivity.class));
+           // Log.d("soapFromFile",""+bodyText);
+            // Toast.makeText(con,""+bodyText,Toast.LENGTH_LONG).show();
             //  waitDialog.dismiss();
-            if (body!=null){
 
-                Element   PostExpensesResponse=(Element)  body.getElementsByTagName("PostExpensesResponse").item(0).getFirstChild();
-                String Code=  PostExpensesResponse.getElementsByTagName("Code").item(0).getFirstChild().getNodeValue().toString();
-                 Toast.makeText(con, Code, Toast.LENGTH_SHORT).show();
-                if (Code.equals("Success")){
-                  //  fileLib mf=new fileLib(con);
-                  //  mf.write("ExpenseCodes.xml",bodyText);
-                  //  startActivity(new Intent(con,listActivity.class));
-                   // finish();
-                }else {
-                    String message =PostExpensesResponse.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue().toString();
-                //    showDailog(message);
-
-                }
-            }else {
-                //Toast.makeText(con, "chek net (activity)", Toast.LENGTH_SHORT).show();
-               // showDailog("Error connection to server ");
-
-            }
 
         }
 
@@ -139,8 +140,20 @@ public class upload_request {
             super.onProgressUpdate(value);
             //Toast.makeText(con,"val="+value[0],Toast.LENGTH_SHORT).show();
 
+            //remove item from list view
+
+
+            if (value.length>1){
+                View list= ((Activity) con).findViewById(R.id.list_expenses);
+                View item= list.findViewWithTag(value[1]);
+                ((ViewManager) item.getParent()).removeView(item);
+            }
+
         }
-    }
+}
+//end task
+
+
 
 private void getEnvelope(Cursor cursor) {
       File file= new File(Environment.getExternalStorageDirectory(),fileEnvelopePath);
@@ -215,7 +228,7 @@ private void getEnvelope(Cursor cursor) {
 
     //make <image>
    String getImgs(String id_expense){
-       String path=Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActyvity.mainFolder+"/imgs/"+id_expense;
+       String path=Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/imgs/"+id_expense;
        Log.d("ImgBase64",path);
        File root=new File(path);
        if(!root.exists()){root.mkdir();}

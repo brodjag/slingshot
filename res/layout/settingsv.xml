@@ -25,10 +25,10 @@
             <LinearLayout style="@style/setting_item_settings" android:orientation="vertical" android:layout_marginTop="5dp" android:layout_marginLeft="7dp" android:layout_marginBottom="5dp" >
                 <LinearLayout  android:layout_margin="0dp"  style="@style/setting_item_settings_item"  android:paddingBottom="0dp">
                     <TextView android:textStyle="bold" style="@style/setting_item_settings_name" android:text="url: " android:paddingBottom="0dp" />
-                    <TextView   android:id="@+id/url_pre" style="@style/setting_item_settings_name" android:text="ku" android:paddingBottom="0dp" /> <!--http://fpat.ru/DemoEnterprise/ws/ -->
+                    <TextView    android:id="@+id/url_pre" style="@style/setting_item_settings_name" android:text="ku" android:paddingBottom="0dp" /> <!--http://fpat.ru/DemoEnterprise/ws/ -->
                 </LinearLayout>
 
-                <LinearLayout android:layout_margin="0dp"  style="@style/setting_item_settings_item" >
+                <LinearLayout android:visibility="gone" android:layout_margin="0dp"  style="@style/setting_item_settings_item" >
                     <TextView android:textStyle="bold" style="@style/setting_item_settings_name"  android:text="@string/name_area" android:paddingTop="0dp" />
                     <TextView android:id="@+id/url_area" style="@style/setting_item_settings_name" android:text="ku" android:paddingTop="0dp" /><!--1csoap -->
                 </LinearLayout>

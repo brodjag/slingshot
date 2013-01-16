@@ -114,6 +114,43 @@ public class fileLib {
         }catch (Exception e){}
     }
 
+   public String readAppendetFile(String path){
+        String q = "";
+        String buf;
+        try {
+                File root = Environment.getExternalStorageDirectory();
+                if (root.canWrite()){
+                    File f = new File(root, path);
+                    InputStream inputStream = new FileInputStream(f);
+
+                    InputStreamReader inputreader = new InputStreamReader(inputStream);
+                    BufferedReader buffreader = new BufferedReader(inputreader, 8);
+                    while ((buf = buffreader.readLine()) != null) {
+                        // if (q.equals("")){q = q+buf;}else {q ="\n"+ q+buf;}
+                        q = q + buf+"\n";
+                    }
+
+                    inputStream.close();
+
+                }
+
+        } catch (Exception e) {
+            //q = null;
+            return null;
+        }
+      return q;
+    }
+
+
+  public void removeAppendedFile(String path){
+      File root = Environment.getExternalStorageDirectory();
+      if (root.canWrite()){
+          File f = new File(root, path);
+         f.delete();
+
+      }
+  }
+
 
 
  static public boolean isSDCardMounted() {

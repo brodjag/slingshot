@@ -8,16 +8,20 @@
     <LinearLayout android:background="#aaa" android:orientation="horizontal" android:layout_height="50dp" android:layout_width="fill_parent">
         <Button android:id="@+id/prev_img" android:layout_width="50dp" android:layout_height="45dp" android:text="@string/lt"/>
 
-        <TextView android:id="@+id/image_title"  android:textColor="#000" android:gravity="center" android:textSize="18dp" android:textStyle="bold"
+        <TextView  android:id="@+id/image_title" android:singleLine="false"  android:textColor="#000" android:gravity="center" android:textSize="18dp" android:textStyle="bold"
                    android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:text="Image 1 from 3" />
         <Button android:id="@+id/next_img" android:layout_width="50dp" android:layout_height="45dp" android:text="@string/lr"/>
     </LinearLayout>
     <!-- end head -->
 
-    <FrameLayout     android:layout_width="fill_parent" android:layout_height="fill_parent" >
+    <FrameLayout android:layout_weight="1"    android:layout_width="fill_parent" android:layout_height="fill_parent" >
         <ImageView android:id="@+id/image_view"     android:layout_width="fill_parent"   android:layout_height="fill_parent"
                      android:scaleType="matrix"  >
         </ImageView>
     </FrameLayout>
 
+    <LinearLayout  android:background="#aaa" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content">
+       <Button android:text="remove" android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="fill_parent" android:layout_margin="5dp"/>
+        <Button android:text="new page" android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="fill_parent" android:layout_margin="5dp"/>
+    </LinearLayout>
 </LinearLayout>

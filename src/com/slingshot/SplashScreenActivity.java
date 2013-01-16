@@ -20,6 +20,7 @@ public class SplashScreenActivity extends Activity {
     String password="$$apvvord";
     String project="";
     String url;
+    String nameArea="";
     /**
      * Called when the activity is first created.
      */
@@ -32,6 +33,7 @@ public class SplashScreenActivity extends Activity {
         login=dh.getSetting("login");
         password=dh.getSetting("password");
         project=dh.getSetting("Project");
+        nameArea=dh.getSetting("url_area");
         dh.close();
         new spinTask().execute();
 
@@ -60,7 +62,7 @@ public class SplashScreenActivity extends Activity {
 
             soap sp=new soap();
             //"http://fpat.ru/DemoEnterprise/ws/1csoap.1cws"
-            Element body= sp.call(url,"http://www.slingshotsoftware.com/XmlNamespaces/WebServices/G2/GetExpenseCodes",envelope);
+            Element body= sp.call(url,nameArea+"/GetExpenseCodes",envelope);
             bodyText=sp.responseString;
             Log.d("soap",envelope);
             return body;  //To change body of implemented methods use File | Settings | File Templates.

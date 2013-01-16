@@ -1,4 +1,4 @@
-package com.slingshot;
+package com.slingshot.add_expense_view;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,11 +9,15 @@ import android.os.Environment;
 import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.*;
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.*;
+import com.slingshot.R;
+import com.slingshot.img_zoom_Activity;
 import com.slingshot.lib.DatabaseHelper;
 import com.slingshot.lib.fileLib;
 import com.slingshot.lib.saveFile;
+import com.slingshot.listActivity;
 import com.slingshot.vetch.ancal.Prefs;
 import com.slingshot.vetch.widgets.DateWidget;
 import org.w3c.dom.Element;
@@ -31,7 +35,7 @@ import java.util.List;
  * Time: 0:13
  * create edit view
  */
-public class addExpensActyvity extends Activity  {
+public class addExpensActivity extends Activity  {
     Activity con;
     String id_expense="-1";
 public static  String mainFolder="slingshot";
@@ -44,14 +48,17 @@ public static  String mainFolder="slingshot";
         super.onCreate(savedInstanceState);
         con=this;
         try{   id_expense=getIntent().getStringExtra("id"); }catch (Exception e){}
-        setFileName();
+        fileName=EHelper.getFileName();
         setContentView(R.layout.add_expese);
        initSpiner();
         setButtons();
         setValues();
     }
 
+    addExpenseHelp EHelper=new addExpenseHelp(con,id_expense);
     private void setButtons() {
+        EHelper=new addExpenseHelp(con,id_expense);
+
         findViewById(R.id.select_date).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,7 +78,7 @@ public static  String mainFolder="slingshot";
                 //  int CAMERA_PIC_REQUEST = 1337;
                 // startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder+"/imgs/"+ get_id_expense()+"/"+fileName);
+                File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder+"/imgs/"+ EHelper.get_id_expense()+"/"+fileName);
                 Log.d("Environment.getExternalStorageDirectory()",""+Environment.getExternalStorageDirectory().getAbsolutePath());
                 mCurrentPhotoPath=file.getAbsolutePath();
                 Uri outputFileUri = Uri.fromFile(file);
@@ -89,31 +96,30 @@ public static  String mainFolder="slingshot";
                 try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
                 if(!fileLib.isSDCardMounted()){Toast.makeText(con,"Cd card isn't connected", Toast.LENGTH_LONG).show(); return;}
 
-                if(getFileCount()<1){ Toast.makeText(getBaseContext(),"no images yet",Toast.LENGTH_LONG).show(); return;}
+                if(EHelper.getFileCount()<1){ Toast.makeText(getBaseContext(),"no images yet",Toast.LENGTH_LONG).show(); return;}
 
                 Intent intent=new Intent(getBaseContext(),img_zoom_Activity.class);
                 intent.putExtra("imageFileId",(0));
-                intent.putExtra("id_expense",get_id_expense());
+                intent.putExtra("id_expense",EHelper.get_id_expense());
                 startActivity(intent);
                // finish();
             }
         });
 
-        ((Button) findViewById(R.id.wach_img)).setText("watch images ("+getFileCount()+")");
 
+
+        ((Button) findViewById(R.id.wach_img)).setText("watch images ("+EHelper.getFileCount()+")");
+
+
+        findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              if(!EHelper.checkInput()){return;}
+            }
+        });
     }
 
-    private String get_id_expense() {
-        if(id_expense.equals("0")){
-          DatabaseHelper dh=new DatabaseHelper(con);
-          int maxId=  dh.getMaxIdExpense();
-          maxId++;
-         Log.d("maxId",""+maxId);
-          return ""+maxId;
-        }else {
-            return id_expense;
-        }
-    }
+
     //end setButton
 
     private static int TAKE_PICTURE = 1;
@@ -137,15 +143,15 @@ public static  String mainFolder="slingshot";
         }
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
-        spinner.setPrompt("Select expense's code");
+       // spinner.setPrompt("Select expense code");
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinerItems);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                addExpensActyvity.this.ExpenseCode = spinerItems.get(i);
-                Toast.makeText(con, addExpensActyvity.this.ExpenseCode,Toast.LENGTH_SHORT).show();
+                addExpensActivity.this.ExpenseCode = spinerItems.get(i);
+                Toast.makeText(con, addExpensActivity.this.ExpenseCode,Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -160,11 +166,7 @@ public static  String mainFolder="slingshot";
     //help function for calendar
     public static Bundle getIntentExtras(Intent data)
     {
-        // data is null, when activity cancelled by BACK BUTTON
-        if (data != null){
-            Bundle extras = data.getExtras();
-            if (extras != null)   {    return extras; }
-    }
+        if (data != null){ Bundle extras = data.getExtras(); if (extras != null) {return extras; } }
         return null;
     };
 
@@ -199,36 +201,15 @@ public static  String mainFolder="slingshot";
       if(resultCode==-1) {
 
           Toast.makeText(this, "Picture is appended", Toast.LENGTH_LONG).show();
-            setFileName();
-          ((Button) findViewById(R.id.wach_img)).setText("watch images ("+getFileCount()+")");
+          fileName= EHelper.getFileName();
+          ((Button) findViewById(R.id.wach_img)).setText("view images ("+EHelper.getFileCount()+")");
         }else{
             Toast.makeText(this, "Picture is not taken", Toast.LENGTH_LONG).show();
         }
     }
     }
   //set next free file's name for value "fileName"  f.e. 1.jpg, 2.jpg...
-   void setFileName(){
-       File mainFolderF=  new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder);
-       if(!mainFolderF.exists()){mainFolderF.mkdir();}
-       File imgFolderF=  new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder+"/imgs");
-       if(!imgFolderF.exists()){imgFolderF.mkdir();}
 
-       File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder+"/imgs/"+get_id_expense());
-       if(!root.exists()){root.mkdir();}
-       File[] ImgsInIdFolder=root.listFiles();
-       if (ImgsInIdFolder==null){return;}
-
-       int max=1;
-       for (int i=0; i<ImgsInIdFolder.length; i++ ){
-           String fileName_i=ImgsInIdFolder[i].getName();
-           Log.d("path1",fileName_i);
-           Log.d("path12",fileName_i.split("\\u002E")[0]) ;
-         int num_i=Integer.parseInt(fileName_i.split("\\u002E")[0]);
-         if (num_i>max){max=num_i;}
-       }
-       max++;
-       fileName=""+max+".jpg";
-   }
 
     //set values from DB to View
     private void setValues() {
@@ -284,42 +265,6 @@ public static  String mainFolder="slingshot";
 
     }
 
-    //count of images for this expense
-    int getFileCount(){
-        File mainFolderF=  new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder);
-        if(!mainFolderF.exists()){mainFolderF.mkdir();}
-
-        File imgs=  new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder+"/imgs");
-        if(!imgs.exists()){imgs.mkdir();}
-
-        File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder+"/imgs/"+get_id_expense());
-        if(!root.exists()){root.mkdir();}
-        File[] ImgsInIdFolder=root.listFiles();
-        if (ImgsInIdFolder==null){return 0;}
-
-        return ImgsInIdFolder.length;
-    }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.edit_expense_menu, menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.setting:
-                saveValues();
-                Intent setting= new Intent(con,settingActivity.class);
-                setting.putExtra("back",settingActivity.backToEditExpense);
-                setting.putExtra("id_expense",id_expense);
-                con.startActivity(setting);
-                con.finish();
-                break;
-
-        }
-        return true;
-    }
 }

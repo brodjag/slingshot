@@ -13,6 +13,7 @@ import android.view.*;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.slingshot.add_expense_view.addExpensActivity;
 import com.slingshot.lib.DatabaseHelper;
 import com.slingshot.lib.fileLib;
 import com.slingshot.uploadService.upService;
@@ -53,7 +54,7 @@ public class listActivity extends Activity {
                 dh.newExpense("","",Calendar.getInstance().getTimeInMillis(),"","");
                 String lastId=""+dh.getMaxIdExpense();
 
-                Intent intent=new Intent(con,addExpensActyvity.class);
+                Intent intent=new Intent(con,addExpensActivity.class);
 
                 intent.putExtra("id",lastId);
                 startActivity(intent);
@@ -74,6 +75,7 @@ public class listActivity extends Activity {
 
             final String id=cursor.getString(0);
             Log.d("id_",cursor.getString(0)+"  "+cursor.getString(1));
+            v.setTag(Integer.parseInt(id));
             ((TextView) v.findViewById(R.id.expense_code)).setText(cursor.getString(1));
             Calendar calendar=Calendar.getInstance();
             calendar.setTimeInMillis(cursor.getLong(2));
@@ -91,7 +93,7 @@ public class listActivity extends Activity {
                     try { ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50);} catch (Exception e) {}
                     if(fileLib.isSDCardMounted()){}else {Toast.makeText(con,"Cd card isn't connected", Toast.LENGTH_LONG).show(); return;}
 
-                    Intent intent=new Intent(con,addExpensActyvity.class);
+                    Intent intent=new Intent(con,addExpensActivity.class);
                     intent.putExtra("id",id);
                     startActivity(intent);
                     finish();
@@ -139,8 +141,8 @@ public class listActivity extends Activity {
 
     }
 
-    private void removeImgFile(String id) {
-        File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActyvity.mainFolder+"/"+id);
+    public static void removeImgFile(String id) {
+        File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/"+id);
         if(!root.exists()){return;}
 
         File[]   ImgsInIdFolder=root.listFiles();
