@@ -65,13 +65,13 @@ public class fileLib {
 
 
 
-  //  private Handler mHandler = new Handler();
+  //  private Handler mHandler = new1 Handler();
     //loading fade..
    // private ProgressDialog dialog;
   /*
     public void waitShow() {
         try {
-           mHandler.post(new Runnable() {
+           mHandler.post(new1 Runnable() {
                 public void run() {
                   //  dialog = ProgressDialog.show(context, "", "Loading. Please wait...", true);
                 }
@@ -85,7 +85,7 @@ public class fileLib {
 
     public void waitHide() {
         try {
-            mHandler.post(new Runnable() {
+            mHandler.post(new1 Runnable() {
                 public void run() {
                    // dialog.dismiss();
                 }

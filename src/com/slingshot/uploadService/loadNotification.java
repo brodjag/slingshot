@@ -62,11 +62,11 @@ public class loadNotification {
 
     public void setUploaded(){
         /*
-        NotificationCompat.Builder  mBuilder = new NotificationCompat.Builder(con);
+        NotificationCompat.Builder  mBuilder = new1 NotificationCompat.Builder(con);
         mBuilder.setContentTitle("Slingshot downloaded")
                 .setContentText("uloaded 5 items")
                 .setSmallIcon(R.drawable.ic_launcher);
-        mBuilder.setContentIntent(PendingIntent.getActivity(con, 0, new Intent(con, startClass.class), PendingIntent.FLAG_UPDATE_CURRENT));
+        mBuilder.setContentIntent(PendingIntent.getActivity(con, 0, new1 Intent(con, startClass.class), PendingIntent.FLAG_UPDATE_CURRENT));
       */
        notification= new Notification(R.drawable.ic_launcher, "Slingshot: Uploaded", System.currentTimeMillis());
         notification.contentView=(new RemoteViews(con.getPackageName(),R.layout.notification_loaded_message));

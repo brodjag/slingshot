@@ -35,9 +35,11 @@ public boolean isSuccess=true;
         try {
 
             if (body!=null){
-                body=(Element)  body.getElementsByTagName("soap:Body").item(0).getFirstChild();
-                Element   PostExpensesResponse=(Element)  body.getElementsByTagName("PostExpensesResponse").item(0).getFirstChild();
-                String Code=  PostExpensesResponse.getElementsByTagName("Code").item(0).getFirstChild().getNodeValue().toString();
+
+              Element   PostExpensesResponse= (Element) body.getElementsByTagName("PostExpensesResponse").item(0);
+                Element PostExpensesResult= (Element) PostExpensesResponse.getElementsByTagName("PostExpensesResult").item(0);
+                String Code=  PostExpensesResult.getElementsByTagName("Code").item(0).getFirstChild().getNodeValue().toString();
+
                 if (Code.equals("Success")){
                     fl.AppendToFile(repotPath,"["+desc+"]"+" ... ok\n\n");
                     DatabaseHelper dh=new DatabaseHelper(con);
@@ -54,15 +56,16 @@ public boolean isSuccess=true;
 
                 }
             }else {
-                fl.AppendToFile(repotPath,"["+desc+"]"+"... coonnection error\n");
-                fl.AppendToFile(repotPath,"Server don't answer"+"\n\n");
+                fl.AppendToFile(repotPath,"["+desc+"]"+"... connection error\n");
+                fl.AppendToFile(repotPath,"Server didn't answer"+"\n\n");
                 isSuccess=false;
 
             }
 
 
         }catch (Exception e){
-            fl.AppendToFile(repotPath,"["+desc+"]"+"... not known error. \nServer log:\n");
+         //   Log.d("qqqq",e.getLocalizedMessage());
+            fl.AppendToFile(repotPath,""+desc+""+"... Unknown error. \nServer log:\n");
             fl.AppendToFile(repotPath,serverText);
             isSuccess=false;
         }
@@ -75,7 +78,7 @@ public void postLoadingDialog(){
     if(!isSuccess){
         AlertDialog.Builder builder = new AlertDialog.Builder(con);
 
-        builder.setMessage("Upload consists errors. Do you want to see report? ")
+        builder.setMessage("There have been errors uploading data. Would you like to see the report? ")
                 .setCancelable(false)
                 .setTitle("Error")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {

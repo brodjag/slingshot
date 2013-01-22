@@ -79,7 +79,7 @@ private class spinTask extends AsyncTask<Void,Integer,Element> {
                 publishProgress(2*(i)+1);
                // ln.setPosition(2*(i)+1,2*cursor.getCount());
                  Element body= sp.call(url,nameArea+"/PostExpenses");
-
+               // Log.d("PostExpensesResponse1",""+body.getLocalName());
                boolean s=  postUpl.mkItem(body, cursor.getString(0),cursor.getString(3),sp.responseString);
                if(s){publishProgress(2*(i)+1, Integer.parseInt(cursor.getString(0)));}
               //  ln.setPosition(2*(i+1),2*cursor.getCount());
@@ -103,7 +103,7 @@ private class spinTask extends AsyncTask<Void,Integer,Element> {
 
             DatabaseHelper dh=new DatabaseHelper(con);
             Cursor cursor=dh.getExpenseAll(); dh.close();
-         //   ln=new loadNotification(con);
+         //   ln=new1 loadNotification(con);
             //   waitDialog= ProgressDialog.show(con, "", "Loading. Please wait...", true);
             dialog = new ProgressDialog(con);
             dialog.setMessage("Uploading...");
@@ -122,9 +122,9 @@ private class spinTask extends AsyncTask<Void,Integer,Element> {
         protected void onPostExecute(Element body){
             dialog.dismiss();
           // ((Activity) con).finish();
-           // con.startActivity(new Intent(con,listActivity.class));
+           // con.startActivity(new1 Intent(con,listActivity.class));
             postUpl.postLoadingDialog();
-             //con.startActivity(new Intent(con, uploadReportActivity.class));
+             //con.startActivity(new1 Intent(con, uploadReportActivity.class));
            // Log.d("soapFromFile",""+bodyText);
             // Toast.makeText(con,""+bodyText,Toast.LENGTH_LONG).show();
             //  waitDialog.dismiss();
@@ -183,7 +183,7 @@ private void getEnvelope(Cursor cursor) {
    String getEnvelopeExpense(Cursor c){
     String Expense="";
 
-      // DatabaseHelper dh=new DatabaseHelper(con);
+      // DatabaseHelper dh=new1 DatabaseHelper(con);
       // Cursor c=dh.getExpenseAll();
 
    //    for (int i=0; i<c.getCount(); i++){
@@ -251,7 +251,7 @@ private void getEnvelope(Cursor cursor) {
     //code images to Base64
    String getImagesBase64(String path){      /*
        Bitmap bm = BitmapFactory.decodeFile(path);
-       ByteArrayOutputStream baos = new ByteArrayOutputStream();
+       ByteArrayOutputStream baos = new1 ByteArrayOutputStream();
        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
        byte[] b = baos.toByteArray();       */
 

@@ -6,11 +6,11 @@
 
     <!--head -->
     <LinearLayout android:background="#aaa" android:orientation="horizontal" android:layout_height="50dp" android:layout_width="fill_parent">
-        <Button android:visibility="invisible" android:layout_width="50dp" android:layout_height="45dp" android:text="+"/>
 
-        <TextView  android:textColor="#000" android:gravity="center" android:textSize="18dp" android:textStyle="bold"
-                   android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:text="Expenses" />
-        <Button android:id="@+id/add_item" android:layout_width="50dp" android:layout_height="45dp" android:text="+"/>
+
+        <TextView  android:textColor="#000" android:gravity="center"  android:textSize="18dp" android:textStyle="bold"
+                   android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:text="Captured Expenses" />
+        <Button android:id="@+id/add_item" android:background="@drawable/new1" android:layout_marginRight="5dp" android:layout_width="30dp" android:layout_height="30dp"  android:textStyle="bold" />
     </LinearLayout>
     <!-- end head -->
 

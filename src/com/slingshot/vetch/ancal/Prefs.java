@@ -15,7 +15,7 @@ public class Prefs
 	private SharedPreferences prefs = null;
 
 	//prefs data
-  private int iMinutesOffset; //offset start of new appointment
+  private int iMinutesOffset; //offset start of new1 appointment
   public int iMinutesDuration; //duration of appointment
   public boolean b24HourMode; //time mode
   public int iFirstDayOfWeek; //first day of week

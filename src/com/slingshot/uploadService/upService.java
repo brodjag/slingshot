@@ -33,7 +33,7 @@ public class upService extends Service {
         NotificationManager   mNotificationManager =    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 // Sets an ID for the notification, so it can be updated
         int notifyID = 1;
-      // loadNotification ln=new loadNotification(this,100);
+      // loadNotification ln=new1 loadNotification(this,100);
      //   ln.setPosition(78);
 
     }

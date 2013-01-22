@@ -55,7 +55,7 @@ public class settingActivity extends Activity {
 
 
     private void serverDialog(){
-        // AlertDialog.Builder builder = new AlertDialog.Builder(con);
+        // AlertDialog.Builder builder = new1 AlertDialog.Builder(con);
         final Dialog dialog = new Dialog(con,R.style.FullHeightDialog);
         dialog.setContentView(R.layout.setting_server_dialog);
         dialog.findViewById(R.id.dialog_enter).setOnClickListener(new View.OnClickListener() {
@@ -89,7 +89,7 @@ public class settingActivity extends Activity {
     }
 
     private void authDialog(){
-        // AlertDialog.Builder builder = new AlertDialog.Builder(con);
+        // AlertDialog.Builder builder = new1 AlertDialog.Builder(con);
         final Dialog dialog = new Dialog(con,R.style.FullHeightDialog);
         dialog.setContentView(R.layout.settings_auth_dialog);
         dialog.findViewById(R.id.dialog_enter).setOnClickListener(new View.OnClickListener() {
@@ -155,7 +155,7 @@ public void myBackFunction(){
         startActivity(intent);
     }
     if (back==backToSplash){startActivity(new Intent(con, SplashScreenActivity.class));}
-   // if (back==backToSplash){startActivity(new Intent(con, SplashScreenActivity.class));}
+   // if (back==backToSplash){startActivity(new1 Intent(con, SplashScreenActivity.class));}
     finish();
 
    // Toast.makeText(con,"переход на нужный экран",Toast.LENGTH_SHORT).show();

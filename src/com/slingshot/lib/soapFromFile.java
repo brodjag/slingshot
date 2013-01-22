@@ -60,7 +60,7 @@ public class soapFromFile {
 
     public String responseString=null;
     public Element call(String url, String soapAction)  {
-        final DefaultHttpClient httpClient=getClient(); // new DefaultHttpClient();
+        final DefaultHttpClient httpClient=getClient(); // new1 DefaultHttpClient();
         Log.d("url_soap", url);
         // параметры запроса
         HttpParams params = httpClient.getParams();
@@ -83,7 +83,7 @@ public class soapFromFile {
 
         try {
             // выполняем запрос
-           // HttpEntity entity = new StringEntity(envelope);
+           // HttpEntity entity = new1 StringEntity(envelope);
             HttpEntity entity = new InputStreamEntity( new FileInputStream(new File(Environment.getExternalStorageDirectory(),fileEnvelopePath)),-1);
             httppost.setEntity(entity);
             // Заголоаок запроса
@@ -119,7 +119,7 @@ public class soapFromFile {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(new InputSource(new StringReader(responseString)));
-            Element body=(Element) ((Element) (doc.getElementsByTagName("soap:Envelope").item(0))).getElementsByTagName("soap:Body").item(0);
+            Element body=(Element) ( (doc)).getElementsByTagName("soap:Body").item(0);
             return body;
 
         } catch (Exception e) {       e.printStackTrace(); return null; }

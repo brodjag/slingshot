@@ -21,7 +21,7 @@ import java.util.Calendar;
 public class DateWidget extends Activity
 {
 	//fields
-	private static String sStrSelect = "plz Select date";
+	private static String sStrSelect = "Please select date";
 	private static String sStrSelected = "Selected date:";
 	private static String sStrNone = "Cancel";
 		

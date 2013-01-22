@@ -35,14 +35,14 @@ public class addExpensImages {
          view.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View view) {               //  "content://media/external/images/media/16"
-                // Uri uri =  Uri.fromFile(new File(urlToImg));
+                // Uri uri =  Uri.fromFile(new1 File(urlToImg));
                /*
-                 Intent i = new Intent();
+                 Intent i = new1 Intent();
                  i.setAction(Intent.ACTION_VIEW);
-                 i.setDataAndType(Uri.fromFile(new File(urlToImg)), "image/*");
+                 i.setDataAndType(Uri.fromFile(new1 File(urlToImg)), "image/*");
                  con.startActivity(i);
                */
-                 //con.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("content://"+urlToImg)));
+                 //con.startActivity(new1 Intent(Intent.ACTION_VIEW, Uri.parse("content://"+urlToImg)));
              }
          });
       ///  Bitmap bitmap = ((BitmapDrawable)drawing).getBitmap();
@@ -76,11 +76,11 @@ public class addExpensImages {
         }   else { scale =  ((float) bounding) / width;}
         matrix.postScale(scale, scale);
 
-        // Create a new bitmap and convert it to a format understood by the ImageView
+        // Create a new1 bitmap and convert it to a format understood by the ImageView
         Bitmap scaledBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
         width = scaledBitmap.getWidth(); // re-use
         height = scaledBitmap.getHeight(); // re-use
-        //  BitmapDrawable result = new BitmapDrawable(scaledBitmap);
+        //  BitmapDrawable result = new1 BitmapDrawable(scaledBitmap);
         Log.i("Test", "scaled width = " + Integer.toString(width));
         Log.i("Test", "scaled height = " + Integer.toString(height));
 
@@ -90,7 +90,7 @@ public class addExpensImages {
 
         // Now change ImageView's dimensions to match the scaled image
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
-       // LinearLayout.LayoutParams params =new LinearLayout.LayoutParams(width,height);
+       // LinearLayout.LayoutParams params =new1 LinearLayout.LayoutParams(width,height);
  //       params.width = width;
         params.height = height;
         view.setLayoutParams(params);

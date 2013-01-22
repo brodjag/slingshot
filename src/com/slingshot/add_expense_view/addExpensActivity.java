@@ -8,12 +8,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.*;
 import com.slingshot.R;
-import com.slingshot.img_zoom_Activity;
+import com.slingshot.imageView.ImgStarter;
 import com.slingshot.lib.DatabaseHelper;
 import com.slingshot.lib.fileLib;
 import com.slingshot.lib.saveFile;
@@ -37,17 +36,27 @@ import java.util.List;
  */
 public class addExpensActivity extends Activity  {
     Activity con;
-    String id_expense="-1";
+    String id_expense="0";
 public static  String mainFolder="slingshot";
     String fileName="1.jpg";
     Calendar dateStart=Calendar.getInstance();
     String ExpenseCode ="";
 
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        ((TextView) findViewById(R.id.img_count)).setText(""+EHelper.getFileCount()+"");
+       // Toast.makeText(this,"ff",Toast.LENGTH_SHORT).show();
+    }
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         con=this;
         try{   id_expense=getIntent().getStringExtra("id"); }catch (Exception e){}
+        EHelper= new addExpenseHelp(this,id_expense);
+        if(id_expense.equals("0")){EHelper.cleanZerroFolder0();}
+
         fileName=EHelper.getFileName();
         setContentView(R.layout.add_expese);
        initSpiner();
@@ -55,7 +64,8 @@ public static  String mainFolder="slingshot";
         setValues();
     }
 
-    addExpenseHelp EHelper=new addExpenseHelp(con,id_expense);
+    addExpenseHelp EHelper=null;
+
     private void setButtons() {
         EHelper=new addExpenseHelp(con,id_expense);
 
@@ -70,16 +80,16 @@ public static  String mainFolder="slingshot";
             }
         });
 
+        /*
         findViewById(R.id.add_img).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
                 if(!fileLib.isSDCardMounted()){Toast.makeText(con,"Cd card isn't connected", Toast.LENGTH_LONG).show(); return;}
-                //  int CAMERA_PIC_REQUEST = 1337;
-                // startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
+
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder+"/imgs/"+ EHelper.get_id_expense()+"/"+fileName);
-                Log.d("Environment.getExternalStorageDirectory()",""+Environment.getExternalStorageDirectory().getAbsolutePath());
+
                 mCurrentPhotoPath=file.getAbsolutePath();
                 Uri outputFileUri = Uri.fromFile(file);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
@@ -87,34 +97,63 @@ public static  String mainFolder="slingshot";
 
             }
         });
-
+                 */
 
         //show images button
-        findViewById(R.id.wach_img).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.add_img).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
-                if(!fileLib.isSDCardMounted()){Toast.makeText(con,"Cd card isn't connected", Toast.LENGTH_LONG).show(); return;}
 
-                if(EHelper.getFileCount()<1){ Toast.makeText(getBaseContext(),"no images yet",Toast.LENGTH_LONG).show(); return;}
+                if(!fileLib.isSDCardMounted()){
+                    Toast.makeText(con, "Cd card isn't connected", Toast.LENGTH_LONG).show();
+                    return;
+                }
 
-                Intent intent=new Intent(getBaseContext(),img_zoom_Activity.class);
-                intent.putExtra("imageFileId",(0));
-                intent.putExtra("id_expense",EHelper.get_id_expense());
-                startActivity(intent);
+                if(EHelper.getFileCount()<1){
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder+"/imgs/"+ EHelper.get_id_expense()+"/"+fileName);
+
+                    mCurrentPhotoPath=file.getAbsolutePath();
+                    Uri outputFileUri = Uri.fromFile(file);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+                    startActivityForResult(intent, TAKE_PICTURE);
+                    //Toast.makeText(getBaseContext(),"no images yet",Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                ImgStarter imgStarter=new ImgStarter(con);
+                imgStarter.showView(EHelper.get_id_expense());
                // finish();
             }
         });
 
 
 
-        ((Button) findViewById(R.id.wach_img)).setText("watch images ("+EHelper.getFileCount()+")");
+        ((TextView) findViewById(R.id.img_count)).setText(""+EHelper.getFileCount()+"");
 
 
         findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
               if(!EHelper.checkInput()){return;}
+                saveValues();
+                finish();
+                startActivity(new Intent(con,listActivity.class));
+            }
+        });
+
+        findViewById(R.id.new1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
+                if(!EHelper.checkInput()){return;}
+                saveValues();
+                Intent intent=new Intent(con,addExpensActivity.class);
+                intent.putExtra("id","0");
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -186,12 +225,7 @@ public static  String mainFolder="slingshot";
             {
                 final long lDate = DateWidget.GetSelectedDateOnActivityResult(requestCode, resultCode, extras, dateStart);
                 if (lDate != -1)
-                {
-                    setDateOnButton();
-                    Toast.makeText(con,""+dateStart.getTime().toString(),Toast.LENGTH_LONG).show();
-
-                    return;
-                }
+                { setDateOnButton(); return;}
             }
         }
       }
@@ -200,9 +234,13 @@ public static  String mainFolder="slingshot";
         if(requestCode==1) {
       if(resultCode==-1) {
 
-          Toast.makeText(this, "Picture is appended", Toast.LENGTH_LONG).show();
+          //Toast.makeText(this, "Picture is appended", Toast.LENGTH_LONG).show();
           fileName= EHelper.getFileName();
-          ((Button) findViewById(R.id.wach_img)).setText("view images ("+EHelper.getFileCount()+")");
+          ((TextView) findViewById(R.id.img_count)).setText("("+EHelper.getFileCount()+")");
+
+          ImgStarter imgStarter=new ImgStarter(con);
+          imgStarter.showView(EHelper.get_id_expense());
+
         }else{
             Toast.makeText(this, "Picture is not taken", Toast.LENGTH_LONG).show();
         }
@@ -213,15 +251,17 @@ public static  String mainFolder="slingshot";
 
     //set values from DB to View
     private void setValues() {
-        if (id_expense.equals("0")) {setDateOnButton(); return;}
+        if (id_expense.equals("0")) {
+            ((TextView)findViewById(R.id.title_edit_expense)).setText("New Expense");
+            setDateOnButton(); return;
+        }
         DatabaseHelper dh=new DatabaseHelper(con);
         Cursor c=dh.getExpenseById(id_expense);
 
         //set spiner
         String code= c.getString(1);//!!!
         for(int i=0; i<spinerItems.size();i++){
-         if(spinerItems.get(i).equals(code));
-           ((Spinner) findViewById(R.id.spinner)).setSelection(i);
+         if(spinerItems.get(i).equals(code)){ ((Spinner) findViewById(R.id.spinner)).setSelection(i);}
         }
         ExpenseCode=code;
 
@@ -239,16 +279,24 @@ public static  String mainFolder="slingshot";
 
    //format date on Button
    void setDateOnButton(){
-        ((Button) findViewById(R.id.select_date)).setText(""+dateStart.get(Calendar.YEAR)+"/"+(dateStart.get(Calendar.MONTH)+1)+"/"+dateStart.get(Calendar.DAY_OF_MONTH));
+        ((Button) findViewById(R.id.select_date)).setText(""+(dateStart.get(Calendar.MONTH)+1)+"/"+dateStart.get(Calendar.DAY_OF_MONTH)+"/"+dateStart.get(Calendar.YEAR));
     }
 
    //save values in DB
    void saveValues(){
+      // EHelper.cleanTemp();
+       EHelper.applyTemp();
+      // EHelper.moveToIdFolder();
        DatabaseHelper dh=new DatabaseHelper(con);
         String desc=((TextView) findViewById(R.id.description)).getText().toString();
-       dh.setExpense(id_expense, ExpenseCode, dateStart.getTimeInMillis(), desc, ((TextView) findViewById(R.id.amount)).getText().toString());
+     if(id_expense.equals("0")){
+         dh.newExpense(id_expense, ExpenseCode, dateStart.getTimeInMillis(), desc, ((TextView) findViewById(R.id.amount)).getText().toString());
+         EHelper.applyFolder0();
+     }else {
+         dh.setExpense(id_expense, ExpenseCode, dateStart.getTimeInMillis(), desc, ((TextView) findViewById(R.id.amount)).getText().toString());
 
-       Log.d("desc",desc);
+     }
+
        dh.close();
    }
 
@@ -257,7 +305,8 @@ public static  String mainFolder="slingshot";
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            saveValues();
+           // saveValues();
+            EHelper.cleanTemp();
             finish();
             startActivity(new Intent(con,listActivity.class));
         }

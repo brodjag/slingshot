@@ -30,7 +30,7 @@ public class saveFile {
         boolean ok = false;
 
         Log.d("saveFile_log", "mark 1");
-       // Authenticator.setDefault(new MyAuthenticator());
+       // Authenticator.setDefault(new1 MyAuthenticator());
 
         try {
             FileOutputStream ff;
@@ -166,7 +166,7 @@ public class saveFile {
         boolean ok = false;
 
         Log.d("loadFile", "mark 1");
-        // Authenticator.setDefault(new MyAuthenticator());
+        // Authenticator.setDefault(new1 MyAuthenticator());
 
         try {
             // FileOutputStream ff;

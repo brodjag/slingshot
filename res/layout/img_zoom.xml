@@ -21,7 +21,7 @@
     </FrameLayout>
 
     <LinearLayout  android:background="#aaa" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content">
-       <Button android:text="remove" android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="fill_parent" android:layout_margin="5dp"/>
-        <Button android:text="new page" android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="fill_parent" android:layout_margin="5dp"/>
+       <Button android:id="@+id/remove_img" android:text="remove" android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="fill_parent" android:layout_margin="5dp"/>
+        <Button android:id="@+id/new_page" android:text="new page" android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="fill_parent" android:layout_margin="5dp"/>
     </LinearLayout>
 </LinearLayout>

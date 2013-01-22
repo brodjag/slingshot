@@ -17,7 +17,7 @@ import android.util.Log;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     static final String dbName="MyDb";
-    static final int version=20;
+    static final int version=23;
 
   //  String createScanedDB="CREATE TABLE scaned (id integer PRIMARY KEY,barcode text,kod text,name text,article text,FullName text,count integer,id_store text, unit text, count_db integer)";
 
@@ -41,8 +41,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE setting (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, value TEXT)");
         db.execSQL("CREATE TABLE expense (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, code TEXT, date LONG,  description TEXT, amount TEXT )");
 
-        db.execSQL("Insert into setting (name, value)  values('url_pre', 'http://support.slingshotsoftware.com/webservices4test/TripExpenseCapture.asmx')");
+       // db.execSQL("Insert into setting (name, value)  values('url_pre', 'http://support.slingshotsoftware.com/webservices4test/TripExpenseCapture.asmx')");    //https://support.slingshotsoftware.com/g2mobdevwebservices/TripExpenseCapture.asmx
+        db.execSQL("Insert into setting (name, value)  values('url_pre', 'https://support.slingshotsoftware.com/g2mobdev')");
+       // db.execSQL("Insert into setting (name, value)  values('url_area','http://www.slingshotsoftware.com/XmlNamespaces/WebServices/G2')");
         db.execSQL("Insert into setting (name, value)  values('url_area','http://www.slingshotsoftware.com/XmlNamespaces/WebServices/G2')");
+
         db.execSQL("Insert into setting (name, value)  values('login','TestTraveler')");
         db.execSQL("Insert into setting (name, value)  values('password','$$apvvord')");
         db.execSQL("Insert into setting (name, value)  values('Project','G2')");
@@ -68,7 +71,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " ON "+employeeTable
                 +" FOR EACH ROW BEGIN"+
                 " SELECT CASE WHEN ((SELECT "+colDeptID+" FROM "+deptTable+
-                " WHERE "+colDeptID+"=new."+colDept+" ) IS NULL)"+
+                " WHERE "+colDeptID+"=new1."+colDept+" ) IS NULL)"+
         " THEN RAISE (ABORT,'Foreign Key Violation') END;"+
                 "  END;");
 
@@ -100,7 +103,7 @@ stores
 /*
 public long insertToStore(String name, String kod) {
     SQLiteDatabase db=this.getWritableDatabase();
-    ContentValues cv=new ContentValues(2);
+    ContentValues cv=new1 ContentValues(2);
      cv.put("name" ,name);
     cv.put("kod" ,kod);
       long  res=db.insert("stores",null,cv);
@@ -111,7 +114,7 @@ public long insertToStore(String name, String kod) {
 public Cursor getAllStores()
     {
         SQLiteDatabase db=this.getReadableDatabase();
-        Cursor cur=db.rawQuery("SELECT * from stores",new String [] {});
+        Cursor cur=db.rawQuery("SELECT * from stores",new1 String [] {});
          cur.moveToFirst();
         db.close();
         return cur;
@@ -132,7 +135,7 @@ public void removeAllStores(){
 /*
 public long insertToScaned(String barcode, String kod, String name, String article, String FullName,int count, String id_store, String unit,int count_db ) {
     SQLiteDatabase db=this.getWritableDatabase();
-    ContentValues cv=new ContentValues(8);
+    ContentValues cv=new1 ContentValues(8);
     cv.put("barcode" ,barcode);
     cv.put("kod" ,kod);
     cv.put("name" ,name);
@@ -154,7 +157,7 @@ public Cursor getAllScaned(String id_store)
         long seconds = System.currentTimeMillis();
 
         SQLiteDatabase db=this.getReadableDatabase();
-        Cursor cur=db.rawQuery("SELECT * from scaned where id_store=?",new String [] {id_store});
+        Cursor cur=db.rawQuery("SELECT * from scaned where id_store=?",new1 String [] {id_store});
         cur.moveToFirst();
         db.close();
         long seconds2 = System.currentTimeMillis();
@@ -172,7 +175,7 @@ public Cursor getAllScaned(String id_store)
     public int removeScanedId(String id)
     {
         SQLiteDatabase db=this.getWritableDatabase();
-        int res= db.delete("scaned","id=?",new String[]{id});
+        int res= db.delete("scaned","id=?",new1 String[]{id});
         db.close();
         return res;
     }
@@ -180,7 +183,7 @@ public Cursor getAllScaned(String id_store)
     public int removeScanedByStoreId(String id)
     {
         SQLiteDatabase db=this.getWritableDatabase();
-        int res= db.delete("scaned","id_store=?",new String[]{id});
+        int res= db.delete("scaned","id_store=?",new1 String[]{id});
 
         db.close();
        return  res;
@@ -193,7 +196,7 @@ public Cursor getAllScaned(String id_store)
 
 
         SQLiteDatabase db=this.getReadableDatabase();
-        Cursor cur=db.rawQuery("SELECT * from scaned where id=?",new String [] {id});
+        Cursor cur=db.rawQuery("SELECT * from scaned where id=?",new1 String [] {id});
         cur.moveToFirst();
         db.close();
 
@@ -204,10 +207,10 @@ public Cursor getAllScaned(String id_store)
     public void updateScanedId(String id,int count)
     {
         SQLiteDatabase db=this.getWritableDatabase();
-        ContentValues args = new ContentValues();
+        ContentValues args = new1 ContentValues();
         args.put("count", count);
-        db.update("scaned",args,"id=?",new String[]{id});
-       // db.delete("scaned","id=?",new String[]{id});
+        db.update("scaned",args,"id=?",new1 String[]{id});
+       // db.delete("scaned","id=?",new1 String[]{id});
         db.close();
 
     }
@@ -219,11 +222,11 @@ public Cursor getAllScaned(String id_store)
         SQLiteDatabase db=this.getReadableDatabase();
         long seconds = System.currentTimeMillis();
         Cursor cur;
-      // String s= String.format("SELECT * from scaned where barcode='"+barcode+"' ",new String [] {});
+      // String s= String.format("SELECT * from scaned where barcode='"+barcode+"' ",new1 String [] {});
       //  Log.d("selectBare", s);
 
-       cur= db.rawQuery("SELECT * from scaned where barcode=? and id_store=?",new String [] {barcode, id_store});
-       // cur=db.query("scaned",new String[] { "*" },"barcode=? and id_store=?",new String []{barcode, id_store},null,null,null,null);
+       cur= db.rawQuery("SELECT * from scaned where barcode=? and id_store=?",new1 String [] {barcode, id_store});
+       // cur=db.query("scaned",new1 String[] { "*" },"barcode=? and id_store=?",new1 String []{barcode, id_store},null,null,null,null);
 
 
         long seconds2 = System.currentTimeMillis();
@@ -248,7 +251,7 @@ public void deleteStorageList(String idStorage){
 public String getSetting(String value){
     SQLiteDatabase db=this.getReadableDatabase();
     Cursor cur;
-   // cur= db.rawQuery("SELECT * from setting ",new String [] {});
+   // cur= db.rawQuery("SELECT * from setting ",new1 String [] {});
     cur= db.rawQuery("SELECT * from setting where name=\""+value+"\"",new String [] {});
     cur.moveToFirst();
 
@@ -298,7 +301,8 @@ public String getSetting(String value){
 
    public String getURL(){
     String res="";
-   res=getSetting("url_pre");
+   res=getSetting("url_pre")+"webservices/TripExpenseCapture.asmx";
+
    return  res;
 
    }
@@ -321,7 +325,7 @@ public Cursor getExpenseById(String id)
     public Cursor getExpenseAll()
     {
         SQLiteDatabase db=this.getReadableDatabase();
-        Cursor cur=db.rawQuery("SELECT * from expense ORDER BY id DESC",new String [] {});
+        Cursor cur=db.rawQuery("SELECT * from expense ORDER BY date DESC",new String [] {});
         cur.moveToFirst();
         db.close();
         return cur;
@@ -383,7 +387,7 @@ public void setExpense(String valueId, String code,long date,String description,
 
     public int getMaxIdExpense()
     {
-        int maxId=0;
+        int maxId=1;
         SQLiteDatabase db=this.getReadableDatabase();
         Cursor cur=db.rawQuery("SELECT MAX(id) from expense",new String [] {});
         cur.moveToFirst();

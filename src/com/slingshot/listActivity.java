@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
@@ -18,7 +19,6 @@ import com.slingshot.lib.DatabaseHelper;
 import com.slingshot.lib.fileLib;
 import com.slingshot.uploadService.upService;
 import com.slingshot.uploadService.upload_request;
-
 
 import java.io.File;
 import java.util.Calendar;
@@ -51,12 +51,11 @@ public class listActivity extends Activity {
                 if(!fileLib.isSDCardMounted()){Toast.makeText(con,"Cd card isn't connected", Toast.LENGTH_LONG).show(); return;}
 
                DatabaseHelper dh=new DatabaseHelper(con);
-                dh.newExpense("","",Calendar.getInstance().getTimeInMillis(),"","");
-                String lastId=""+dh.getMaxIdExpense();
+               // dh.newExpense("","",Calendar.getInstance().getTimeInMillis(),"","");
+               // String lastId=""+dh.getMaxIdExpense();
 
                 Intent intent=new Intent(con,addExpensActivity.class);
-
-                intent.putExtra("id",lastId);
+                  intent.putExtra("id","0");
                 startActivity(intent);
                 finish();
             }
@@ -74,12 +73,15 @@ public class listActivity extends Activity {
            final View v= con.getLayoutInflater().inflate(R.layout.expenses_list_item,null);
 
             final String id=cursor.getString(0);
-            Log.d("id_",cursor.getString(0)+"  "+cursor.getString(1));
+           // Log.d("id_",cursor.getString(0)+"  "+cursor.getString(1));
             v.setTag(Integer.parseInt(id));
-            ((TextView) v.findViewById(R.id.expense_code)).setText(cursor.getString(1));
+
+            final String epenseCode=cursor.getString(1);
+            ((TextView) v.findViewById(R.id.expense_code)).setText(epenseCode);
+
             Calendar calendar=Calendar.getInstance();
             calendar.setTimeInMillis(cursor.getLong(2));
-                    ((TextView) v.findViewById(R.id.list_item_date)).setText("" + calendar.get(Calendar.YEAR) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + (calendar.get(Calendar.DAY_OF_MONTH)));
+                    ((TextView) v.findViewById(R.id.list_item_date)).setText("" + (calendar.get(Calendar.MONTH) + 1) + "/" + (calendar.get(Calendar.DAY_OF_MONTH))+ "/"+ calendar.get(Calendar.YEAR) );
 
             //description
             final   String desc=cursor.getString(3);
@@ -101,6 +103,22 @@ public class listActivity extends Activity {
                 }
             });
 
+
+            //long click
+            v.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    setNormaItemlSize();
+                   LinearLayout w=(LinearLayout) v.findViewWithTag("body");
+
+                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)  w.getLayoutParams();
+                    params.height=200;
+                    w.setLayoutParams(params);
+
+                    return true;
+                }
+            });
+
             //remove item
             v.findViewById(R.id.remove_item).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -109,7 +127,7 @@ public class listActivity extends Activity {
                     if(!fileLib.isSDCardMounted()){Toast.makeText(con,"Cd card isn't connected", Toast.LENGTH_LONG).show(); return;}
 
                     final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(con);
-                    dlgAlert.setMessage("Remove '" + desc + "'?");
+                    dlgAlert.setMessage("Remove "+epenseCode+" '" + desc + "'?");
                     //dlgAlert.setTitle("App Title");
                     dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
@@ -141,6 +159,24 @@ public class listActivity extends Activity {
 
     }
 
+public void setNormaItemlSize(){
+
+    LinearLayout list=(LinearLayout) findViewById(R.id.list_expenses);
+
+
+    for(int i=0; i<list.getChildCount(); i++){
+
+        LinearLayout w=(LinearLayout)  list.getChildAt(i).findViewWithTag("body");
+
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)  w.getLayoutParams();
+        params.height= LinearLayout.LayoutParams.WRAP_CONTENT;
+        w.setLayoutParams(params);
+
+    }
+
+
+}
+
     public static void removeImgFile(String id) {
         File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/"+id);
         if(!root.exists()){return;}
@@ -171,13 +207,36 @@ public class listActivity extends Activity {
                 con.startActivity(setting);
                 con.finish();
                 break;
+
             case R.id.upload:
-               // new upload_request(con);
-                new upload_request(this);
-              //  con.stopService(service);
-              //  con.startService(service);
+               try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
+                if(!fileLib.isSDCardMounted()){Toast.makeText(con,"Cd card isn't connected", Toast.LENGTH_LONG).show(); break;}
+
+                final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(con);
+                dlgAlert.setMessage("Post expenses to server?");
+                //dlgAlert.setTitle("App Title");
+                dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
+                        new upload_request(con);
+                    }
+                });
+                dlgAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                dlgAlert.setCancelable(true);
+                dlgAlert.create().show();
                 break;
 
+            case R.id.web:
+                DatabaseHelper dh=new DatabaseHelper(con);
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(dh.getSetting("url_pre")));
+                startActivity(browserIntent);
+                break;
         }
         return true;
     }
@@ -195,7 +254,7 @@ public class listActivity extends Activity {
                 return true;
             }else {
             finish();
-            //startActivity(new Intent(con,listActivity.class));
+            //startActivity(new1 Intent(con,listActivity.class));
             }
         }
         return super.onKeyDown(keyCode, event);

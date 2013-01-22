@@ -23,12 +23,13 @@
     <string name="settings_title">Settings</string>
     <string name="server">Server</string>
 
-    <string name="it_restart_after_changes">(change does restart!)</string>
+    <string name="it_restart_after_changes">(When changed, program restarts)</string>
 
     <string name="lt">\u003C</string>
     <string name="lr">\u003e</string>
 
     <!--add expense -->
     <string name="Select_expense_code">Select expense code</string>
+    <string name="save_n_new">Save \u0026 new</string>
 
 </resources>

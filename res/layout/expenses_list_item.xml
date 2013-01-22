@@ -4,7 +4,7 @@
               android:layout_width="fill_parent"
               android:layout_height="wrap_content">
     <!--item start -->
-    <LinearLayout  android:orientation="horizontal" android:layout_marginBottom="1dp"  android:layout_height="wrap_content" android:layout_width="fill_parent" android:background="#000">
+    <LinearLayout android:tag="body"  android:orientation="horizontal" android:layout_marginBottom="1dp"  android:layout_height="wrap_content" android:layout_width="fill_parent" android:background="#000">
 
         <!--first col -->
         <LinearLayout android:orientation="vertical" android:layout_width="0dp" android:layout_weight="1"

@@ -1,4 +1,4 @@
-package com.slingshot;
+package com.slingshot.imageView;
 
 import android.app.Activity;
 import android.graphics.Matrix;
@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import com.slingshot.R;
 
 /**
  * Created with IntelliJ IDEA.

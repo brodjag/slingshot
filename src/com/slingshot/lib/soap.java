@@ -57,7 +57,7 @@ public soap(){
 
 public String responseString=null;
 public Element call(String url, String soapAction,  String envelope)  {
-        final DefaultHttpClient httpClient=getClient(); // new DefaultHttpClient();
+        final DefaultHttpClient httpClient=getClient(); // new1 DefaultHttpClient();
          Log.d("url_soap", url);
         // параметры запроса
         HttpParams params = httpClient.getParams();
@@ -77,7 +77,7 @@ public Element call(String url, String soapAction,  String envelope)  {
 
         //athorisation
        /*
-       String pass64= new String(Base64.encode(logPass.getBytes(), Base64.NO_WRAP));
+       String pass64= new1 String(Base64.encode(logPass.getBytes(), Base64.NO_WRAP));
         Log.d("pass64", pass64);        //YWRtaW46MTIz
         httppost.setHeader("Authorization", ("Basic "+pass64));
          */
@@ -85,7 +85,7 @@ public Element call(String url, String soapAction,  String envelope)  {
 
         try {
             // выполняем запрос
-            HttpEntity entity = new StringEntity(envelope);     //  InputStreamEntity reqEntity = new InputStreamEntity( new FileInputStream(new File()), -1);
+            HttpEntity entity = new StringEntity(envelope);     //  InputStreamEntity reqEntity = new1 InputStreamEntity( new1 FileInputStream(new1 File()), -1);
             httppost.setEntity(entity);
             // Заголоаок запроса
             ResponseHandler<String> rh=new ResponseHandler<String>() {
