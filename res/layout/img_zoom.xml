@@ -15,7 +15,7 @@
     <!-- end head -->
 
     <FrameLayout android:layout_weight="1"    android:layout_width="fill_parent" android:layout_height="fill_parent" >
-        <ImageView android:id="@+id/image_view"     android:layout_width="fill_parent"   android:layout_height="fill_parent"
+        <ImageView android:id="@+id/image_view"     android:layout_width="fill_parent" android:src="@drawable/test"   android:layout_height="fill_parent"
                      android:scaleType="matrix"  >
         </ImageView>
     </FrameLayout>

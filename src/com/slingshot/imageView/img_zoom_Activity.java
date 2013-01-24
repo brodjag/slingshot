@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Vibrator;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewManager;
 import android.widget.ImageView;
@@ -49,7 +48,8 @@ public class img_zoom_Activity extends Activity {
 
             imageFileId=getIntent().getIntExtra("imageFileId",0) ;
         }catch (Exception e){}
-      //  new1 img_zoom_helper(this);
+       // new img_zoom_helper(con,1);
+
         setImgArray();   //init File[] ImgsInIdFolder
         setArrows();
 
@@ -144,6 +144,7 @@ void setArrows(){
         findViewById(R.id.next_img).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!fileLib.isSDCardMounted()){    Toast.makeText(con, "Cd card isn't connected", Toast.LENGTH_LONG).show(); return; }
                 Intent intent=new Intent(getBaseContext(),img_zoom_Activity.class);
                 intent.putExtra("imageFileId",(imageFileId+1));
                 intent.putExtra("id_expense",id_expense);
@@ -156,6 +157,7 @@ void setArrows(){
         findViewById(R.id.prev_img).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!fileLib.isSDCardMounted()){    Toast.makeText(con, "Cd card isn't connected", Toast.LENGTH_LONG).show(); return; }
                 Intent intent=new Intent(getBaseContext(),img_zoom_Activity.class);
                 intent.putExtra("imageFileId",(imageFileId-1));
                 intent.putExtra("id_expense",id_expense);
@@ -177,7 +179,7 @@ void setImg(){
 
     //Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActyvity.mainFolder+"/"+id_expense+"/"
     String path=""+Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/imgs/"+id_expense+"/"+ ImgsInIdFolder[imageFileId].getName();
-    Log.d("path",path) ;
+    //Log.d("path",path) ;
     Bitmap bitmap = BitmapFactory.decodeFile(path);
 
     ImageView imageView=(ImageView)  findViewById(R.id.image_view);
@@ -194,6 +196,7 @@ void setImg(){
     matrix.setScale(scale, scale);
 
     imageView.setImageMatrix(matrix);
+    new MyZoom(this,scale);
 
 };
 

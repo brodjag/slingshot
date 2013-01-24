@@ -31,6 +31,9 @@ public class img_zoom_helper {
 
     PointF start=new PointF(0,0);
     PointF mid=new PointF(0,0);
+
+    PointF delta=new PointF(0,0);
+    PointF oldDelta=new PointF(0,0);
     //  float   start_y=0;
 
     public img_zoom_helper(Activity c, final float scale){
@@ -44,6 +47,7 @@ public class img_zoom_helper {
                Matrix savedMatrix = new Matrix();
 
 
+
                ImageView view = (ImageView) v;
 
 
@@ -52,20 +56,24 @@ public class img_zoom_helper {
 
 
                    case MotionEvent.ACTION_DOWN:
+
                        savedMatrix.set(matrix);
                        start.set(event.getX(), event.getY());
                        Log.d(TAG, "mode=DRAG");
                        mode = DRAG;
                        break;
                    case MotionEvent.ACTION_UP:
+
                    case MotionEvent.ACTION_POINTER_UP:
                        mode = NONE;
+
                        Log.d(TAG, "mode=NONE");
                        break;
                    case MotionEvent.ACTION_MOVE:
                        if (mode == DRAG) {
                            matrix.set(savedMatrix);
-                           matrix.postTranslate(event.getX() - start.x, event.getY() - start.y);
+                           delta.set(oldDelta.x+event.getX() - start.x, oldDelta.y+event.getY() - start.y);
+                           matrix.postTranslate(delta.x,delta.y);
                            matrix.postScale(scale,scale);
 
                        } else if (mode == ZOOM) {

@@ -2,6 +2,8 @@ package com.slingshot.imageView;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.widget.Toast;
+import com.slingshot.lib.fileLib;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,7 +20,7 @@ public ImgStarter(Activity c){
 
 public void showView(String get_id_expense){
 
-
+    if(!fileLib.isSDCardMounted()){    Toast.makeText(con, "Cd card isn't connected", Toast.LENGTH_LONG).show(); return; }
 
     Intent intent=new Intent(con,img_zoom_Activity.class);
     intent.putExtra("imageFileId",(0));
