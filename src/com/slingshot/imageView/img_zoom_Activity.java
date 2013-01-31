@@ -8,10 +8,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Vibrator;
+import android.os.*;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewManager;
 import android.widget.ImageView;
@@ -39,117 +38,126 @@ public class img_zoom_Activity extends Activity {
      float scale=1;
     String mCurrentPhotoPath;
     Activity con;
+    int bitmapSmallWidth=1200;
+    boolean allowClicked =false;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);     con=this;
         setContentView(R.layout.img_zoom);
+
+        java.lang.Runtime.getRuntime().gc();
+
+        Log.i("memory",""+ java.lang.Runtime.getRuntime().freeMemory());
+
         try{
             id_expense=getIntent().getStringExtra("id_expense") ;
 
             imageFileId=getIntent().getIntExtra("imageFileId",0) ;
         }catch (Exception e){}
        // new img_zoom_helper(con,1);
+        System.gc();
 
         setImgArray();   //init File[] ImgsInIdFolder
         setArrows();
 
-        //remove item
-        findViewById(R.id.remove_img).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
 
-                final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(con);
-                dlgAlert.setMessage("Remove this image'?");
-                //dlgAlert.setTitle("App Title");
-                dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+
+                //remove item
+                findViewById(R.id.remove_img).setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                    public void onClick(View view) {
                         try {((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
-                        ImgsInIdFolder[imageFileId].delete();
 
-                        File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/imgs/"+id_expense);
-                        if(!root.exists()){root.mkdir();}
-                        ImgsInIdFolder=root.listFiles();
+                        final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(con);
+                        dlgAlert.setMessage("Remove this image'?");
+                        //dlgAlert.setTitle("App Title");
+                        dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                try {((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
+                                ImgsInIdFolder[imageFileId].delete();
 
-                        if(ImgsInIdFolder.length==0){ finish();   return;}
+                                File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/imgs/"+id_expense);
+                                if(!root.exists()){root.mkdir();}
+                                ImgsInIdFolder=root.listFiles();
+
+                                if(ImgsInIdFolder.length==0){ finish();   return;}
 
 
-                        Intent intent=new Intent(con,img_zoom_Activity.class);
-                        intent.putExtra("id_expense", id_expense);
-                        if( imageFileId!=0){intent.putExtra("imageFileId",(imageFileId-1));
-                        }  else { intent.putExtra("imageFileId",(imageFileId));     }
-                        con.startActivity(intent);
-                        con.finish();
-                        Toast.makeText(con,"Image was removed",Toast.LENGTH_SHORT).show();
+                                Intent intent=new Intent(con,img_zoom_Activity.class);
+                                intent.putExtra("id_expense", id_expense);
+                                if( imageFileId!=0){intent.putExtra("imageFileId",(imageFileId-1));
+                                }  else { intent.putExtra("imageFileId",(imageFileId));     }
+                                con.startActivity(intent);
+                                con.finish();
+                                Toast.makeText(con,"Image was removed",Toast.LENGTH_SHORT).show();
+
+
+                            }
+                        });
+                        dlgAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                try {((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
+                                dialogInterface.dismiss();
+                            }
+                        });
+                        dlgAlert.setCancelable(true);
+                        dlgAlert.create().show();
 
 
                     }
                 });
-                dlgAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+
+                //new image
+
+                findViewById(R.id.new_page).setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        try {((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
-                        dialogInterface.dismiss();
+                    public void onClick(View view) {
+                        try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
+                        if(!fileLib.isSDCardMounted()){Toast.makeText(con,"Cd card isn't connected", Toast.LENGTH_LONG).show(); return;}
+
+                        addExpenseHelp EHelper= new addExpenseHelp(con,id_expense);
+                        fileName=EHelper.getFileName();
+
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActivity.mainFolder+"/imgs/"+ EHelper.get_id_expense()+"/"+fileName);
+
+                        mCurrentPhotoPath=file.getAbsolutePath();
+                        Uri outputFileUri = Uri.fromFile(file);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+                        startActivityForResult(intent, TAKE_PICTURE);
                     }
                 });
-                dlgAlert.setCancelable(true);
-                dlgAlert.create().show();
 
 
+                setImg();
 
-
-
-
-
-
-
-
-
-
-
-
-            }
-        });
-
-
-        //new image
-
-        findViewById(R.id.new_page).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
-                if(!fileLib.isSDCardMounted()){Toast.makeText(con,"Cd card isn't connected", Toast.LENGTH_LONG).show(); return;}
-
-                addExpenseHelp EHelper= new addExpenseHelp(con,id_expense);
-                fileName=EHelper.getFileName();
-
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActivity.mainFolder+"/imgs/"+ EHelper.get_id_expense()+"/"+fileName);
-
-                mCurrentPhotoPath=file.getAbsolutePath();
-                Uri outputFileUri = Uri.fromFile(file);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-                startActivityForResult(intent, TAKE_PICTURE);
-            }
-        });
     }
+
+    Handler handler=new Handler();
+
 
 void setArrows(){
     if(ImgsInIdFolder==null){   Toast.makeText(this, "no imgs for this expense", Toast.LENGTH_LONG).show(); } else{
-        try{  setImg();}catch (Exception e){}
+       // try{
+         //   setImg();//}catch (Exception e){}
         ((TextView) findViewById(R.id.image_title)).setText("View Receipt\n(page "+(imageFileId+1)+" of "+ImgsInIdFolder.length+")");
 
         //arrow right
         findViewById(R.id.next_img).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!allowClicked){return;}; allowClicked =false;
                 if(!fileLib.isSDCardMounted()){    Toast.makeText(con, "Cd card isn't connected", Toast.LENGTH_LONG).show(); return; }
                 Intent intent=new Intent(getBaseContext(),img_zoom_Activity.class);
                 intent.putExtra("imageFileId",(imageFileId+1));
                 intent.putExtra("id_expense",id_expense);
-                startActivity(intent);
                 finish();
+                startActivity(intent);
+
             }
         });
 
@@ -157,12 +165,14 @@ void setArrows(){
         findViewById(R.id.prev_img).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!allowClicked){return;}; allowClicked =false;
                 if(!fileLib.isSDCardMounted()){    Toast.makeText(con, "Cd card isn't connected", Toast.LENGTH_LONG).show(); return; }
                 Intent intent=new Intent(getBaseContext(),img_zoom_Activity.class);
                 intent.putExtra("imageFileId",(imageFileId-1));
                 intent.putExtra("id_expense",id_expense);
-                startActivity(intent);
                 finish();
+                startActivity(intent);
+
             }
         });
 
@@ -176,29 +186,110 @@ void setArrows(){
 
 
 void setImg(){
-
-    //Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActyvity.mainFolder+"/"+id_expense+"/"
-    String path=""+Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/imgs/"+id_expense+"/"+ ImgsInIdFolder[imageFileId].getName();
-    //Log.d("path",path) ;
-    Bitmap bitmap = BitmapFactory.decodeFile(path);
-
+    /*
     ImageView imageView=(ImageView)  findViewById(R.id.image_view);
+    String path=""+Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/imgs/"+id_expense+"/"+ ImgsInIdFolder[imageFileId].getName();
+
+    //get only size
+    final BitmapFactory.Options options = new BitmapFactory.Options();
+    options.inJustDecodeBounds = true;
+    Bitmap bitmap4Size = BitmapFactory.decodeFile(path,options);
+    int imageHeight = options.outHeight;
+    int imageWidth = options.outWidth;
+    Log.d("bitmap4Size.getWidth()", "" + imageWidth);
+
+
+    BitmapFactory.Options options1 = new BitmapFactory.Options();
+    //rotate angle
+    float angle=0; float scale=1;
+    if(imageWidth>imageHeight){
+        angle=90;
+        options1.inSampleSize=Math.round( imageHeight/bitmapSmallWidth);
+
+    }else {
+        options1.inSampleSize=Math.round( imageWidth/bitmapSmallWidth);
+    }
+
+    options1.inJustDecodeBounds=false;
 
     Matrix matrix=new Matrix();
 
-    if(bitmap.getWidth()>bitmap.getHeight()){
-    matrix.setRotate(90,bitmap.getHeight()/2,bitmap.getWidth()/2);
-    }
 
-    Bitmap b2=Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
-    (imageView).setImageBitmap(b2);
-    scale=(float)dpToPx(320)/ b2.getWidth();
+    Bitmap b= BitmapFactory.decodeFile(path,options1);
+    (imageView).setImageBitmap(b); //b2
+
+    if(options1.outWidth<options1.outHeight){
+    scale=(float)dpToPx(320)/ options1.outWidth;
+    }else {scale=(float)dpToPx(320)/ options1.outHeight;}
     matrix.setScale(scale, scale);
 
+    matrix.postRotate(angle,scale*options1.outHeight/2,scale*options1.outWidth/2);
+
     imageView.setImageMatrix(matrix);
-    new MyZoom(this,scale);
+    new MyZoom(this,scale,matrix);
+     allowClicked=true;
+    */
+    String path=""+Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/imgs/"+id_expense+"/"+ ImgsInIdFolder[imageFileId].getName();
+  // new loadBitmapFomFile(con,path);
+   new bitmapTask().execute(path);
 
 };
+
+
+    protected class bitmapTask extends AsyncTask<String,Void,Bitmap> {
+        String path;
+
+        @Override
+        protected Bitmap doInBackground(String... par) {
+            path=par[0];
+            //get only size
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            Bitmap bitmap4Size = BitmapFactory.decodeFile(path,options);
+            int imageHeight = options.outHeight;
+            int imageWidth = options.outWidth;
+            Log.d("bitmap4Size.getWidth()", "" + imageWidth);
+
+
+            BitmapFactory.Options options1 = new BitmapFactory.Options();
+            //rotate angle
+            float angle=0; //float scale=1;
+            if(imageWidth>imageHeight){
+                angle=90;
+                options1.inSampleSize=Math.round( imageHeight/bitmapSmallWidth);
+
+            }else {
+                options1.inSampleSize=Math.round( imageWidth/bitmapSmallWidth);
+            }
+
+            options1.inJustDecodeBounds=false;
+
+            matrix=new Matrix();
+            Bitmap b= BitmapFactory.decodeFile(path,options1);
+            if(options1.outWidth<options1.outHeight){
+                scale=(float)dpToPx(320)/ options1.outWidth;
+            }else {scale=(float)dpToPx(320)/ options1.outHeight;}
+            matrix.setScale(scale, scale);
+            matrix.postRotate(angle,scale*options1.outHeight/2,scale*options1.outWidth/2);
+            return b;
+        }
+
+        float scale;
+        Matrix matrix;
+
+        @Override
+        protected void onPostExecute(Bitmap b){
+            ImageView imageView=(ImageView)  con.findViewById(R.id.image_view);
+
+            (imageView).setImageBitmap(b);
+            imageView.setScaleType(ImageView.ScaleType.MATRIX);
+            imageView.setImageMatrix(matrix);
+            new MyZoom(con,scale,matrix);
+            allowClicked=true;
+        }
+    }
+
+
 
 
  File[] ImgsInIdFolder=null;
@@ -214,16 +305,7 @@ void     setImgArray(){
    ImgsInIdFolder=root.listFiles();
     if (ImgsInIdFolder==null){return;}
 
-    /*
-    int max=1;
-    for (int i=0; i<ImgsInIdFolder.length; i++ ){
-        String fileName_i=ImgsInIdFolder[i].getName();
-        Log.d("path1", fileName_i);
-        Log.d("path12",fileName_i.split("\\u002E")[0]) ;
-        int num_i=Integer.parseInt(fileName_i.split("\\u002E")[0]);
-        if (num_i>max){max=num_i;}
-    }
-    */
+
 }
 
     private int dpToPx(int dp)
@@ -237,7 +319,10 @@ void     setImgArray(){
 
 
         ImageView imageView=(ImageView)  findViewById(R.id.image_view);
-        ((ViewManager) imageView.getParent()).removeView(imageView);
+
+        Bitmap myBitmap1 = BitmapFactory.decodeResource(getResources(),R.drawable.n1);
+            imageView.setImageBitmap(myBitmap1);
+                ((ViewManager) imageView.getParent()).removeView(imageView);  imageView=null;
         System.gc();
         super.onDestroy();
     }
@@ -264,4 +349,7 @@ void     setImgArray(){
             }
         }
     }
+
+
+
 }

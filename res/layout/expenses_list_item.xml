@@ -32,7 +32,7 @@
         <!--end second col -->
 
         <!-- delete -->
-        <TextView android:id="@+id/remove_item" android:layout_height="fill_parent" android:layout_width="50dp" android:background="#711"
+        <TextView android:id="@+id/remove_item"  android:layout_height="fill_parent" android:layout_width="50dp" android:background="#711"
                   android:text="X" android:gravity="center"/>
         <!--end delete -->
 

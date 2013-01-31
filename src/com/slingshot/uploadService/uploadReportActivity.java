@@ -25,6 +25,7 @@ public class uploadReportActivity extends Activity {
         fileLib fl=new fileLib(this);
 
        ((EditText)findViewById(R.id.uploadReport)).setText(fl.readAppendetFile(repotPath));
+        ((EditText)findViewById(R.id.uploadReport)).setKeyListener(null);
 
         //NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         //mNotificationManager.cancel(0);

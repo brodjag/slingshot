@@ -1,6 +1,8 @@
 package com.slingshot.add_expense_view;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -305,10 +307,27 @@ public static  String mainFolder="slingshot";
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-           // saveValues();
-            EHelper.cleanTemp();
-            finish();
-            startActivity(new Intent(con,listActivity.class));
+
+            final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(con);
+            dlgAlert.setMessage("Discard changes?");
+            dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
+                    EHelper.cleanTemp();
+                    finish();
+                    startActivity(new Intent(con,listActivity.class));
+                }
+            });
+            dlgAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            dlgAlert.setCancelable(true);
+            dlgAlert.create().show();
+
         }
         return super.onKeyDown(keyCode, event);
 

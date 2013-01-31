@@ -331,6 +331,15 @@ public Cursor getExpenseById(String id)
         return cur;
     }
 
+    public Cursor getExpenseAllBackOrder()
+    {
+        SQLiteDatabase db=this.getReadableDatabase();
+        Cursor cur=db.rawQuery("SELECT * from expense ORDER BY date ASC",new String [] {});
+        cur.moveToFirst();
+        db.close();
+        return cur;
+    }
+
 
 public void setExpense(String valueId, String code,long date,String description,String amount){
         if (getExpenseCount(valueId)==0){

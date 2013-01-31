@@ -30,12 +30,23 @@ PointF mpointOld=new PointF(0,0);
     static final int ZOOM = 2;
     int mode = NONE;
 float oldDist;
-float scale=1;
+double baseScale=1;
 float minScale=1;
+float scale=1;
 
-public MyZoom(Activity c, float scl){
-    con=c;    minScale=scl;
-    scale=scl;
+Matrix mtx;
+
+public MyZoom(Activity c, float scl, final Matrix startMatrix){
+    con=c;       mtx=startMatrix;
+    baseScale=scl;
+  //  minScale=scl;
+
+
+
+
+
+
+
 
 
 
@@ -44,7 +55,7 @@ public MyZoom(Activity c, float scl){
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
-            Matrix matrix = new Matrix();
+            Matrix matrix = new Matrix(mtx);
             switch (event.getAction() & MotionEvent.ACTION_MASK) {
 
                 case MotionEvent.ACTION_DOWN: start.set(event.getX(), event.getY());  mode = DRAG; break;
@@ -52,19 +63,40 @@ public MyZoom(Activity c, float scl){
                 case MotionEvent.ACTION_POINTER_UP:
 
                     if(mode==ZOOM){
-                        PointF mpointNew2=midPoint(event);
-                       // delta.x= (mpointNew2.x-mpointOld.x)+delta.x+(event.getX() - start.x)/scale ;
-                      //  delta.y= (mpointNew2.y-mpointOld.y)+delta.y+(event.getY() - start.y)/scale ;
-
-                        float newDist2 = spacing(event);
-                           //(float) Math.sqrt(
+                        float newDist1 = spacing(event);
+                        float scale1 =newDist1 / oldDist;
+                        PointF mpointNew=midPoint(event);
 
 
+                        //check scale
+                        float  ss=scale1*scale;
+                        if(ss<minScale){ ss=minScale;
+                        }else if (ss>(1/baseScale)){ ss=(float) (1/baseScale);
+                        }
+                        //end check scale
+                        //ss=(float) (scale1*scale); //!!!!!!!!
 
-                        delta.x=(delta.x+(mpointNew2.x-mpointOld.x)/(scale));     //+event.getX() - start.x
-                        delta.y=(delta.y+(mpointNew2.y-mpointOld.y)/(scale));     //+event.getY() - start.y
-                        scale =scale* newDist2 / oldDist;
-                        if(scale<minScale){scale=minScale;}
+                        // check horizontal translate
+
+                         float newPositionX=(float)(delta.x+(mpointNew.x-mpointOld.x));
+                        //float  newPositionX=(float)(delta.x*ss/scale+(mpointNew.x-mpointOld.x)*(baseScale*ss)+(mpointNew.x)*(1-ss));
+
+
+                        if (newPositionX>0){newPositionX=0; }
+                        if (newPositionX<getMaxDeltaWidth(ss/scale).x){newPositionX=getMaxDeltaWidth(ss/scale).x; }
+                        //end  check horizontal translate
+
+                        // check vertical translate
+                         float newPositionY=(float)(delta.y+(mpointNew.y-mpointOld.y));
+                       // float newPositionY=(float)(delta.y*ss/scale+(mpointNew.y-mpointOld.y)*(baseScale*ss)+(mpointNew.y)*(1-ss));
+                        if (newPositionY>0){newPositionY=0; }
+                        if (newPositionY<getMaxDeltaWidth(ss/scale).y){newPositionY=getMaxDeltaWidth(ss/scale).y; }
+                        //end  check vertical translate
+
+
+                        scale=ss;
+                        delta.x=(newPositionX);     //+event.getX() - start.x
+                        delta.y=(float)(newPositionY);     //+event.getY() - start.y
 
                     }
 
@@ -77,29 +109,54 @@ public MyZoom(Activity c, float scl){
 
                     if (mode == DRAG) {
 
-                        getMaxDeltaWidth();
-                    matrix.postTranslate((delta.x+(event.getX() - start.x)/scale), delta.y+ (event.getY() - start.y)/scale);
-                        Matrix scaleMatrix=new Matrix(matrix);
-                        scaleMatrix.postScale( scale, scale);
-                        ((ImageView) v).setImageMatrix(scaleMatrix);
+                        action_on_MOVE_DROP(event,v);
 
-
-
-                    }else if (mode == ZOOM) {
+                    };
+                    if (mode == ZOOM) {
                         float newDist1 = spacing(event);
                         float scale1 =newDist1 / oldDist;
-
                         PointF mpointNew=midPoint(event);
-                       // delta.x=delta.x+(mpointNew.x-mpointOld.x);
-                      //  delta.y=delta.y+(mpointNew.y-mpointOld.y);
-
-                        matrix.postTranslate((delta.x+(mpointNew.x-mpointOld.x)*(scale)),delta.y+(mpointNew.y-mpointOld.y)*(scale));          //+event.getX() - start.x
 
 
+                        //check scale
+                        float  ss=scale1*scale;
+                        if(ss<minScale){ ss=minScale;
+                        }else if (ss>(1/baseScale)){ ss=(float) (1/baseScale);
+                        }
+                        //end check scale
+                        //ss=(float) (scale1*scale); //!!!!!!!!
 
-                        Matrix scaleMatrix=new Matrix(matrix);
-                        if(scale1*scale<minScale){scaleMatrix.postScale( minScale, minScale);}else{scaleMatrix.postScale( scale1*scale, scale1* scale);}
+                        Log.d("ss/scale",""+ss/scale);
+                        // check horizontal translate
+
+                        float newPositionX=(float)(delta.x+(mpointNew.x-mpointOld.x));        //*(baseScale*scale)
+                        //float  newPositionX=(float)(delta.x+(mpointNew.x-mpointOld.x)*(baseScale*ss)+(mpointNew.x)*(1-ss));
+                        //float  newPositionX=(float)(delta.x*(ss/scale));
+                        if (newPositionX>0){newPositionX=0; }
+                        if (newPositionX<getMaxDeltaWidth(ss/scale).x){newPositionX=getMaxDeltaWidth(ss/scale).x; }
+                        //end  check horizontal translate
+
+                        // check vertical translate
+                        float newPositionY=(float)(delta.y+(mpointNew.y-mpointOld.y));  //*(baseScale*scale)
+                       // float newPositionY=(float)(delta.y+(mpointNew.y-mpointOld.y)*(baseScale*ss)+(mpointNew.y)*(1-ss));
+                       // float newPositionY=(float)(delta.y*ss/scale);
+                        if (newPositionY>0){newPositionY=0; }
+                        if (newPositionY<getMaxDeltaWidth(ss/scale).y){newPositionY=getMaxDeltaWidth(ss/scale).y; }
+                        //end  check vertical translate
+
+
+
+                        Matrix matrixMove=new Matrix(matrix);
+                        matrixMove.postTranslate(newPositionX,newPositionY);          //+event.getX() - start.x
+                        Matrix scaleMatrix=new Matrix(matrixMove);
+                       // scaleMatrix.postTranslate(newPositionX,newPositionY);
+
+                       // scaleMatrix.postScale(ss,ss);
+                        scaleMatrix.postScale(ss,ss);
                         ((ImageView) v).setImageMatrix(scaleMatrix);
+
+                       // action_on_MOVE_DROP(event,v);
+
 
                     }
 
@@ -110,7 +167,17 @@ public MyZoom(Activity c, float scl){
                 case MotionEvent.ACTION_POINTER_DOWN:  oldDist = spacing(event); mode = ZOOM; mpointOld=midPoint(event); break;
                 case MotionEvent.ACTION_UP:
 
-                    if (mode==DRAG){delta.set(delta.x+(event.getX() - start.x)/scale, delta.y+(event.getY() - start.y)/scale);}
+                    if (mode==DRAG){
+
+                        double newPositionX= (delta.x+(event.getX() - start.x)/scale);
+                        if (newPositionX>0){newPositionX=0; };
+                        if (newPositionX<getMaxDeltaWidth(1).x){newPositionX=getMaxDeltaWidth(1).x; }
+
+                        double newPositionY= (delta.y+(event.getY() - start.y)/scale);
+                        if (newPositionY>0){newPositionY=0; };
+                        if (newPositionY<getMaxDeltaWidth(1).y){newPositionY=getMaxDeltaWidth(1).y; }
+
+                        delta.set((float) newPositionX, (float) (newPositionY));}
                     mode=NONE;
                     break;
 
@@ -138,20 +205,55 @@ public MyZoom(Activity c, float scl){
         return p;
     }
 
-    private void getMaxDeltaWidth() {
+    private PointF getMaxDeltaWidth(float addScale) {
+        PointF res=new PointF(0,0);
         ImageView imageView=(ImageView)  con.findViewById(R.id.image_view);
-       int imageViewWidth= imageView.getWidth();
+        int imageViewWidth= imageView.getWidth();
+        int imageViewHeight= imageView.getHeight();
 
-        imageView.getDrawable().getIntrinsicWidth();
+        int bitmapWidth= imageView.getDrawable().getIntrinsicWidth();
+        int bitmapHeight= imageView.getDrawable().getIntrinsicHeight();
 
+        if(bitmapWidth>bitmapHeight){int temp=bitmapWidth; bitmapWidth=bitmapHeight; bitmapHeight=temp;};
 
-       int bitmapWidth=  imageView.getDrawable().getIntrinsicWidth();
+        //res.x=imageViewWidth-Math.round(bitmapWidth*scaleL);
+       // Log.d("Scale",""+scale);     Log.d("baseScale",""+baseScale);    Log.d("baseScalebitmapWidth",""+bitmapWidth);
 
-       int currentDelta=Math.round(bitmapWidth*scale)-imageViewWidth;
+        res.x=imageViewWidth/(scale*addScale)-Math.round(bitmapWidth*baseScale);
+       // Log.d("Scale res.x",""+res.x);
 
-
-        Log.d("currentDelta",""+currentDelta);
+        res.y=imageViewHeight/(scale*addScale)-Math.round(bitmapHeight*baseScale);
+        return res;
     };
+
+void action_on_MOVE_DROP(MotionEvent event, View v){
+    Matrix matrix = new Matrix(mtx);
+    // check horizontal translate
+    float newPositionX=(float) (delta.x+(event.getX() - start.x)/scale);
+    Log.d("newPositionX",""+newPositionX);  Log.d("newPositionX max",""+getMaxDeltaWidth(1).x);
+    if (newPositionX>0){newPositionX=0; }
+    if (newPositionX<getMaxDeltaWidth(1).x){newPositionX=getMaxDeltaWidth(1).x; }
+    //end  check horizontal translate
+
+    // check vertical translate
+    float newPositionY=(float) (delta.y+(event.getY() - start.y)/scale);
+    Log.d("newPositionY",""+newPositionY);
+    if (newPositionY>0){newPositionY=0; }
+    if (newPositionY<(getMaxDeltaWidth(1).y)){newPositionY=getMaxDeltaWidth(1).y; }      ///
+    //end  check vertical translate
+
+
+
+
+    matrix.postTranslate(newPositionX, newPositionY);
+    Matrix scaleMatrix=new Matrix(matrix);
+    scaleMatrix.postScale((float) scale,(float) scale);
+    ((ImageView) v).setImageMatrix(scaleMatrix);
+
+
+}
+
+
 
 
 }

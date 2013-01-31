@@ -27,9 +27,9 @@ public class postCallUpload {
     }
 
 public boolean isSuccess=true;
-    public boolean mkItem(Element body, String id,String desc,String serverText){
+    public boolean mkItem(Element body, String id,String desc,String serverText, String expenseCode){
         fileLib fl=new fileLib(con);
-        String repotPath= addExpensActivity.mainFolder+"/"+reportFile;
+        String reportPath= addExpensActivity.mainFolder+"/"+reportFile;
 
 
         try {
@@ -41,7 +41,7 @@ public boolean isSuccess=true;
                 String Code=  PostExpensesResult.getElementsByTagName("Code").item(0).getFirstChild().getNodeValue().toString();
 
                 if (Code.equals("Success")){
-                    fl.AppendToFile(repotPath,"["+desc+"]"+" ... ok\n\n");
+                    fl.AppendToFile(reportPath,expenseCode +" \""+desc+"\""+" ... ok\n\n");
                     DatabaseHelper dh=new DatabaseHelper(con);
                     dh.removeExpenseId(id);
                     dh.close();
@@ -50,14 +50,14 @@ public boolean isSuccess=true;
 
                 }else {
                     String message =PostExpensesResponse.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue().toString();
-                    fl.AppendToFile(repotPath,"["+desc+"]"+"... error\n");
-                    fl.AppendToFile(repotPath,message+"\n\n");
+                    fl.AppendToFile(reportPath,"["+desc+"]"+"... error\n");
+                    fl.AppendToFile(reportPath,message+"\n\n");
                     isSuccess=false;
 
                 }
             }else {
-                fl.AppendToFile(repotPath,"["+desc+"]"+"... connection error\n");
-                fl.AppendToFile(repotPath,"Server didn't answer"+"\n\n");
+                fl.AppendToFile(reportPath,"["+desc+"]"+"... connection error\n");
+                fl.AppendToFile(reportPath,"Server didn't answer"+"\n\n");
                 isSuccess=false;
 
             }
@@ -65,8 +65,8 @@ public boolean isSuccess=true;
 
         }catch (Exception e){
          //   Log.d("qqqq",e.getLocalizedMessage());
-            fl.AppendToFile(repotPath,""+desc+""+"... Unknown error. \nServer log:\n");
-            fl.AppendToFile(repotPath,serverText);
+            fl.AppendToFile(reportPath,""+desc+""+"... Unknown error. \nServer log:\n");
+            fl.AppendToFile(reportPath,serverText);
             isSuccess=false;
         }
         return false;

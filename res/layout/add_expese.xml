@@ -6,12 +6,18 @@
     <!--head -->
     <LinearLayout android:background="#aaa" android:orientation="horizontal" android:layout_height="50dp" android:layout_width="fill_parent">
 
-        <Button android:background="@drawable/done"  android:id="@+id/save" android:text="" android:layout_height="30dp"  android:layout_width="30dp" android:layout_marginLeft="5dp" />
+        <LinearLayout android:id="@+id/save"   android:layout_width="50dp" android:layout_height="50dp" android:gravity="center">
+            <LinearLayout android:background="@drawable/done"   android:text="" android:layout_height="30dp"  android:layout_width="30dp" android:layout_marginLeft="5dp" />
+                      <!--@drawable/done -->
+        </LinearLayout>
+
     <TextView android:id="@+id/title_edit_expense"  android:textColor="#000" android:gravity="center" android:textSize="18dp" android:textStyle="bold"
                    android:layout_height="fill_parent" android:layout_width="fill_parent"  android:layout_weight="1" android:text="Edit expense" />
 
-        <Button android:id="@+id/new1"   android:background="@drawable/new1"  android:layout_height="30dp"  android:layout_width="30dp" android:layout_marginRight="5dp"  android:padding="0dp" />
 
+       <LinearLayout android:id="@+id/new1"  android:layout_width="50dp" android:layout_height="50dp" android:gravity="center">
+            <LinearLayout    android:background="@drawable/new1"  android:layout_height="30dp"  android:layout_width="30dp" android:layout_marginRight="5dp"  android:padding="0dp" />
+       </LinearLayout>
     </LinearLayout>
     <!-- end head -->
 
@@ -29,17 +35,17 @@
         <!--descraption & amount -->
         <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:orientation="horizontal">
             <EditText android:id="@+id/description" android:layout_margin="5dp" android:layout_width="1dp" android:layout_weight="1" android:layout_height="wrap_content"
-                      android:hint="description" android:inputType="text" />
+                      android:hint="description" android:inputType="textCapSentences" />
             <EditText android:singleLine="false" android:id="@+id/amount" android:layout_margin="5dp" android:layout_width="100dp" android:layout_height="wrap_content"
                       android:hint="amount" android:inputType="numberDecimal" />
         </LinearLayout>
         <!--end descraption & amount -->
 
 
-
+         <!--img viewr contaner -->
 
         <LinearLayout android:orientation="horizontal" android:id="@+id/add_expence_img_list" android:layout_height="wrap_content"
-                      android:layout_width="fill_parent">
+                      android:layout_width="fill_parent" android:gravity="center">
 
         <LinearLayout android:id="@+id/add_img" android:background="@drawable/camera2" android:layout_margin="5dp" android:layout_height="50dp"
                 android:layout_width="50dp"   android:text="Images">
@@ -50,7 +56,7 @@
 
 
         </LinearLayout>
-
+            <!--end img viewr contaner -->
             <!--
         <Button android:visibility="gone" android:id="@+id/add_img" android:layout_margin="5dp" android:layout_height="wrap_content"
                 android:layout_width="fill_parent" android:text="add image"/>

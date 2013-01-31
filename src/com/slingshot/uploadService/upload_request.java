@@ -80,12 +80,13 @@ private class spinTask extends AsyncTask<Void,Integer,Element> {
                // ln.setPosition(2*(i)+1,2*cursor.getCount());
                  Element body= sp.call(url,nameArea+"/PostExpenses");
                // Log.d("PostExpensesResponse1",""+body.getLocalName());
-               boolean s=  postUpl.mkItem(body, cursor.getString(0),cursor.getString(3),sp.responseString);
+               boolean s=  postUpl.mkItem(body, cursor.getString(0),cursor.getString(3),sp.responseString,cursor.getString(1));
                if(s){publishProgress(2*(i)+1, Integer.parseInt(cursor.getString(0)));}
               //  ln.setPosition(2*(i+1),2*cursor.getCount());
                 bodyText=sp.responseString;
                // Log.d("soap", envelope);
-
+                //if first time server don't answer
+               if (body==null){cursor.close(); dh.close(); return null;}
             }
             cursor.close(); dh.close();
 
@@ -121,15 +122,12 @@ private class spinTask extends AsyncTask<Void,Integer,Element> {
         @Override
         protected void onPostExecute(Element body){
             dialog.dismiss();
-          // ((Activity) con).finish();
-           // con.startActivity(new1 Intent(con,listActivity.class));
             postUpl.postLoadingDialog();
-             //con.startActivity(new1 Intent(con, uploadReportActivity.class));
-           // Log.d("soapFromFile",""+bodyText);
-            // Toast.makeText(con,""+bodyText,Toast.LENGTH_LONG).show();
-            //  waitDialog.dismiss();
 
-
+            DatabaseHelper databaseHelper=new DatabaseHelper(con);
+            Cursor c=databaseHelper.getExpenseAllBackOrder();
+            if(c.getCount()==0){ ((Activity)con).findViewById(R.id.scrollist).setVisibility(View.GONE); ((Activity)con).findViewById(R.id.message_no_items).setVisibility(View.VISIBLE); }
+            c.close();
         }
 
         @Override
@@ -138,11 +136,8 @@ private class spinTask extends AsyncTask<Void,Integer,Element> {
             dialog.setProgress(value[0]);
             dialog.setProgressNumberFormat("");
             super.onProgressUpdate(value);
-            //Toast.makeText(con,"val="+value[0],Toast.LENGTH_SHORT).show();
 
             //remove item from list view
-
-
             if (value.length>1){
                 View list= ((Activity) con).findViewById(R.id.list_expenses);
                 View item= list.findViewWithTag(value[1]);
@@ -180,14 +175,8 @@ private void getEnvelope(Cursor cursor) {
 
 }
 
-   String getEnvelopeExpense(Cursor c){
+private String getEnvelopeExpense(Cursor c){
     String Expense="";
-
-      // DatabaseHelper dh=new1 DatabaseHelper(con);
-      // Cursor c=dh.getExpenseAll();
-
-   //    for (int i=0; i<c.getCount(); i++){
-
 
           String id= c.getString(0);
        Log.d("upload id=",id);
@@ -227,9 +216,9 @@ private void getEnvelope(Cursor cursor) {
 
 
     //make <image>
-   String getImgs(String id_expense){
+private    String getImgs(String id_expense){
        String path=Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/imgs/"+id_expense;
-       Log.d("ImgBase64",path);
+      // Log.d("ImgBase64",path);
        File root=new File(path);
        if(!root.exists()){root.mkdir();}
      File[]  ImgsInIdFolder=root.listFiles();
@@ -249,7 +238,7 @@ private void getEnvelope(Cursor cursor) {
    }
 
     //code images to Base64
-   String getImagesBase64(String path){      /*
+private    String getImagesBase64(String path){      /*
        Bitmap bm = BitmapFactory.decodeFile(path);
        ByteArrayOutputStream baos = new1 ByteArrayOutputStream();
        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
@@ -267,7 +256,7 @@ private void getEnvelope(Cursor cursor) {
        return encodedImage;
    }
 
-    public static class IOUtil
+public static class IOUtil
     {
         public static byte[] readFile (String file) throws IOException {
             return readFile(new File(file));

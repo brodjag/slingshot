@@ -5,23 +5,23 @@
         android:orientation="vertical">
 
     <!--head -->
-    <LinearLayout android:background="#aaa" android:orientation="horizontal" android:layout_height="50dp" android:layout_width="fill_parent">
-        <Button android:id="@+id/prev_img" android:layout_width="50dp" android:layout_height="45dp" android:text="@string/lt"/>
+    <LinearLayout android:background="#aaa" android:orientation="horizontal" android:layout_height="wrap_content" android:layout_width="fill_parent">
+        <Button android:layout_margin="5dp" android:id="@+id/prev_img" android:layout_width="50dp" android:layout_height="45dp" android:background="@android:drawable/ic_media_previous" />
 
         <TextView  android:id="@+id/image_title" android:singleLine="false"  android:textColor="#000" android:gravity="center" android:textSize="18dp" android:textStyle="bold"
                    android:layout_height="fill_parent" android:layout_width="fill_parent" android:layout_weight="1" android:text="Image 1 from 3" />
-        <Button android:id="@+id/next_img" android:layout_width="50dp" android:layout_height="45dp" android:text="@string/lr"/>
+        <Button android:id="@+id/next_img" android:layout_margin="5dp" android:layout_width="50dp" android:layout_height="45dp" android:background="@android:drawable/ic_media_next" />
     </LinearLayout>
     <!-- end head -->
 
-    <FrameLayout android:layout_weight="1"    android:layout_width="fill_parent" android:layout_height="fill_parent" >
-        <ImageView android:id="@+id/image_view"     android:layout_width="fill_parent" android:src="@drawable/test"   android:layout_height="fill_parent"
-                     android:scaleType="matrix"  >
+    <FrameLayout android:layout_weight="1"    android:layout_width="fill_parent" android:layout_height="0dp" >
+        <ImageView android:id="@+id/image_view" android:src="@drawable/loading45" android:layout_gravity="center"     android:layout_width="fill_parent"    android:layout_height="fill_parent"
+                     android:scaleType="center" android:layout_marginBottom="0dp"  >
         </ImageView>
     </FrameLayout>
 
-    <LinearLayout  android:background="#aaa" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content">
-       <Button android:id="@+id/remove_img" android:text="remove" android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="fill_parent" android:layout_margin="5dp"/>
+    <LinearLayout   android:background="#aaa" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content">
+       <Button android:id="@+id/remove_img"  android:text="remove" android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="fill_parent" android:layout_margin="5dp"/>
         <Button android:id="@+id/new_page" android:text="new page" android:layout_height="wrap_content" android:layout_weight="1" android:layout_width="fill_parent" android:layout_margin="5dp"/>
     </LinearLayout>
 </LinearLayout>

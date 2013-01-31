@@ -68,6 +68,8 @@ public class listActivity extends Activity {
         DatabaseHelper dh=new DatabaseHelper(con);
          Cursor cursor=dh.getExpenseAll();
 
+        if(cursor.getCount()>0){  findViewById(R.id.scrollist).setVisibility(View.VISIBLE);findViewById(R.id.message_no_items).setVisibility(View.GONE); }
+
         for (int i=0;i<cursor.getCount();i++){
             cursor.moveToPosition(i);
            final View v= con.getLayoutInflater().inflate(R.layout.expenses_list_item,null);
@@ -135,6 +137,10 @@ public class listActivity extends Activity {
                             try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
                            DatabaseHelper dh=new DatabaseHelper(con);
                             dh.removeExpenseId(id);
+
+                            Cursor c=dh.getExpenseAll();
+                            if(c.getCount()==0){  findViewById(R.id.scrollist).setVisibility(View.GONE);findViewById(R.id.message_no_items).setVisibility(View.VISIBLE); }
+                            c.close();
                             dh.close();
                             removeImgFile(id);
                             ((ViewManager) v.getParent()).removeView(v);
@@ -250,7 +256,7 @@ public void setNormaItemlSize(){
 
             if (exit>1){
                 exit--;
-                Toast.makeText(con,"click back one more time to exit",Toast.LENGTH_LONG).show();
+                Toast.makeText(con,"To exit, press Back again",Toast.LENGTH_LONG).show();
                 return true;
             }else {
             finish();
