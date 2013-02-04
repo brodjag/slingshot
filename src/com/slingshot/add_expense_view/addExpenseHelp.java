@@ -2,7 +2,6 @@ package com.slingshot.add_expense_view;
 
 import android.app.Activity;
 import android.os.Environment;
-import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.slingshot.R;
@@ -83,26 +82,25 @@ public   addExpenseHelp(Activity c,String id_expense){
         int max=0;
         for (int i=0; i<ImgsInIdFolder.length; i++ ){
             String fileName_i=ImgsInIdFolder[i].getName();
-            Log.d("path1",fileName_i);
-            Log.d("path12",fileName_i.split("\\u002E")[0]) ;
+            //Log.d("path1",fileName_i);
+           // Log.d("path12",fileName_i.split("\\u002E")[0]) ;
             int num_i=Integer.parseInt(fileName_i.split("\\u002E")[0]);
             if (num_i>max){max=num_i;}
         }
 
-        //temp test too
-        /*
-        File rootTemp = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/imgs/"+get_id_expense());
-        if(!rootTemp.exists()){root.mkdir();}
-        File[] ImgsInIdFolderTemp=rootTemp.listFiles();
+        //check remove folder  too
+        File removeFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/imgs/"+get_id_expense());
+        if(!removeFolder.exists()){removeFolder.mkdir();}
+        File[] ImgsInRemoveFolfer=removeFolder.listFiles();
 
-        for (int i=0; i<ImgsInIdFolderTemp.length; i++ ){
-            String fileName_i=ImgsInIdFolderTemp[i].getName();
-            Log.d("path1",fileName_i);
-            Log.d("path12",fileName_i.split("\\u002E")[0]) ;
+        for (int i=0; i<ImgsInRemoveFolfer.length; i++ ){
+            String fileName_i=ImgsInRemoveFolfer[i].getName();
+           // Log.d("path1",fileName_i);
+          //  Log.d("path12",fileName_i.split("\\u002E")[0]) ;
             int num_i=Integer.parseInt(fileName_i.split("\\u002E")[0]);
             if (num_i>max){max=num_i;}
         }
-        */
+
 
         max++;
         return ""+max+".tmp";
@@ -144,11 +142,11 @@ public   addExpenseHelp(Activity c,String id_expense){
 
     public void cleanTemp(){
         File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActivity.mainFolder+"/imgs/"+ get_id_expense());
-
+       if(!file.exists()){file.mkdir();}
       //  File tmpFolder= new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActivity.mainFolder+"/imgs/"+  "temp");
         File[] files= file.listFiles();
         for(int i=0; i<files.length; i++){
-           String name=""+files[i].getName();
+           String name=files[i].getName();
             String end=name.split("\\u002E")[1];
            if(end.equals("tmp")) {
                files[i].delete(); //Toast.makeText(con,"rr",Toast.LENGTH_SHORT).show();
@@ -169,6 +167,30 @@ public   addExpenseHelp(Activity c,String id_expense){
                 File newFile=new File(path+"/"+name.split("\\u002E")[0]+".jpg");
                 files[i].renameTo(newFile);
             };
+
+        } //end for
+        cleanRemoveFolder();
+    }
+
+    //clean folder removed
+    public void cleanRemoveFolder(){
+
+        File removedFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/imgs/removed");
+        if (!removedFolder.exists()){removedFolder.mkdir();}
+        File[] removedFiles=removedFolder.listFiles();
+        for(int i=0; i<removedFiles.length; i++){
+            removedFiles[i].delete();
+        }
+    }
+
+    public void cancelRemoved(){
+        File removedFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/imgs/removed");
+        if (!removedFolder.exists()){removedFolder.mkdir();}
+        File[] removedFiles=removedFolder.listFiles();
+        for(int i=0; i<removedFiles.length; i++){
+            String path=Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActivity.mainFolder+"/imgs/"+ get_id_expense()+"/"+removedFiles[i].getName();
+            File file = new File(path);
+            removedFiles[i].renameTo(file);
         }
     }
 

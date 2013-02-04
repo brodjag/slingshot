@@ -13,6 +13,7 @@ import android.view.ViewManager;
 import android.widget.Toast;
 import com.slingshot.R;
 import com.slingshot.add_expense_view.addExpensActivity;
+import com.slingshot.imageView.orderFileArray;
 import com.slingshot.lib.DatabaseHelper;
 import com.slingshot.lib.fileLib;
 import com.slingshot.lib.soapFromFile;
@@ -222,6 +223,7 @@ private    String getImgs(String id_expense){
        File root=new File(path);
        if(!root.exists()){root.mkdir();}
      File[]  ImgsInIdFolder=root.listFiles();
+    ImgsInIdFolder=new orderFileArray(ImgsInIdFolder).makeOrder();
        String res="";
        fileLib fl=new fileLib(con);
        for(int i=0; i<ImgsInIdFolder.length; i++){

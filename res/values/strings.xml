@@ -13,7 +13,7 @@
     <string name="ok"> Enter </string>
 
     <!--autorisation setting -->
-    <string name="authorization">Authorization</string>
+    <string name="authorization">Authentication</string>
     <string name="login">Login: </string>
     <string name="password">Password: </string>
     <string name="enter_login">plz enter login</string>

@@ -17,7 +17,7 @@
     <EditText android:inputType="textUri" android:id="@+id/url_pre" android:text="" android:layout_margin="5dp" android:layout_height="wrap_content"
               android:hint="@string/enter_url" android:layout_width="fill_parent" />
 
-    <TextView android:layout_marginLeft="5dp" android:layout_marginTop="1dp" android:layout_width="fill_parent"
+    <TextView android:visibility="gone" android:layout_marginLeft="5dp" android:layout_marginTop="1dp" android:layout_width="fill_parent"
               android:layout_height="wrap_content" android:text="@string/name_area"/>
     <EditText android:visibility="gone" android:id="@+id/url_area" android:inputType="textUri" android:text="" android:layout_margin="5dp" android:layout_height="wrap_content" android:hint="@string/name_area" android:layout_width="fill_parent" />
 

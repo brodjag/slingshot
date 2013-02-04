@@ -50,13 +50,13 @@ public boolean isSuccess=true;
 
                 }else {
                     String message =PostExpensesResponse.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue().toString();
-                    fl.AppendToFile(reportPath,"["+desc+"]"+"... error\n");
+                    fl.AppendToFile(reportPath,expenseCode +" \""+desc+"\""+"\nError\n");
                     fl.AppendToFile(reportPath,message+"\n\n");
                     isSuccess=false;
 
                 }
             }else {
-                fl.AppendToFile(reportPath,"["+desc+"]"+"... connection error\n");
+                fl.AppendToFile(reportPath,expenseCode +" \""+desc+"\""+"\nConnection error\n");
                 fl.AppendToFile(reportPath,"Server didn't answer"+"\n\n");
                 isSuccess=false;
 
@@ -65,8 +65,8 @@ public boolean isSuccess=true;
 
         }catch (Exception e){
          //   Log.d("qqqq",e.getLocalizedMessage());
-            fl.AppendToFile(reportPath,""+desc+""+"... Unknown error. \nServer log:\n");
-            fl.AppendToFile(reportPath,serverText);
+            fl.AppendToFile(reportPath,expenseCode +" \""+desc+"\""+" \nUnknown error. \nServer response:\n");
+            fl.AppendToFile(reportPath,serverText+"\n\n");
             isSuccess=false;
         }
         return false;

@@ -57,6 +57,7 @@ public static  String mainFolder="slingshot";
         con=this;
         try{   id_expense=getIntent().getStringExtra("id"); }catch (Exception e){}
         EHelper= new addExpenseHelp(this,id_expense);
+        EHelper.cleanTemp();
         if(id_expense.equals("0")){EHelper.cleanZerroFolder0();}
 
         fileName=EHelper.getFileName();
@@ -82,24 +83,6 @@ public static  String mainFolder="slingshot";
             }
         });
 
-        /*
-        findViewById(R.id.add_img).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
-                if(!fileLib.isSDCardMounted()){Toast.makeText(con,"Cd card isn't connected", Toast.LENGTH_LONG).show(); return;}
-
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+mainFolder+"/imgs/"+ EHelper.get_id_expense()+"/"+fileName);
-
-                mCurrentPhotoPath=file.getAbsolutePath();
-                Uri outputFileUri = Uri.fromFile(file);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
-                startActivityForResult(intent, TAKE_PICTURE);
-
-            }
-        });
-                 */
 
         //show images button
         findViewById(R.id.add_img).setOnClickListener(new View.OnClickListener() {
@@ -308,12 +291,14 @@ public static  String mainFolder="slingshot";
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
 
+         if (new checkChanges4BackButton(this).isChanged()){
             final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(con);
             dlgAlert.setMessage("Discard changes?");
             dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
+                    EHelper.cancelRemoved();
                     EHelper.cleanTemp();
                     finish();
                     startActivity(new Intent(con,listActivity.class));
@@ -328,8 +313,16 @@ public static  String mainFolder="slingshot";
             dlgAlert.setCancelable(true);
             dlgAlert.create().show();
 
+
+        }else {
+            EHelper.cleanTemp();
+            finish();
+            startActivity(new Intent(con,listActivity.class));
+        }
+       // return false;
         }
         return super.onKeyDown(keyCode, event);
+
 
     }
 

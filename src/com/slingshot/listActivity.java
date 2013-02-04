@@ -101,7 +101,7 @@ public class listActivity extends Activity {
                     intent.putExtra("id",id);
                     startActivity(intent);
                     finish();
-                    Log.d("delete_edit","edit="+id);
+                   // Log.d("delete_edit","edit="+id);
                 }
             });
 
@@ -110,13 +110,14 @@ public class listActivity extends Activity {
             v.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
+                    /*
                     setNormaItemlSize();
                    LinearLayout w=(LinearLayout) v.findViewWithTag("body");
 
                     LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)  w.getLayoutParams();
                     params.height=200;
                     w.setLayoutParams(params);
-
+                    */
                     return true;
                 }
             });
@@ -184,11 +185,11 @@ public void setNormaItemlSize(){
 }
 
     public static void removeImgFile(String id) {
-        File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/"+id);
+        File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/imgs/"+id);
         if(!root.exists()){return;}
 
         File[]   ImgsInIdFolder=root.listFiles();
-        if (ImgsInIdFolder==null){return;}
+        if (ImgsInIdFolder==null){root.delete(); Log.d("delete","id="+id); return;}
         for (int i=0; i<ImgsInIdFolder.length; i++ ){
             ImgsInIdFolder[i].delete();
         }
