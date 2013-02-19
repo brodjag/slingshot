@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.util.FloatMath;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,6 +22,9 @@ Activity con;
 PointF start=new PointF(0,0);
 PointF delta=new PointF(0,0);
 
+PointF O=new PointF(0,0);
+
+
 PointF mpointOld=new PointF(0,0);
 
     static final int NONE = 0;
@@ -39,6 +41,15 @@ Matrix mtx;
 public MyZoom(Activity c, float scl, final Matrix startMatrix){
     con=c;       mtx=startMatrix;
     baseScale=scl;
+
+
+    //set default position
+     PointF paddingStart=getPadding(1);
+    delta.set(paddingStart.x/2,paddingStart.y/2);
+    Matrix m=new Matrix(mtx) ;
+    m.postTranslate(delta.x, delta.y);
+
+    ((ImageView) con.findViewById(R.id.image_view)).setImageMatrix(m);
   //  minScale=scl;
 
 
@@ -71,26 +82,21 @@ public MyZoom(Activity c, float scl, final Matrix startMatrix){
                         //check scale
                         float  ss=scale1*scale;
                         if(ss<minScale){ ss=minScale;
-                        }else if (ss>(1/baseScale)){ ss=(float) (1/baseScale);
-                        }
+                        }else if (ss>(1/baseScale)){ ss=(float) (1/baseScale);}
                         //end check scale
-                        //ss=(float) (scale1*scale); //!!!!!!!!
+
+                        PointF padding= getPadding(ss/scale);
 
                         // check horizontal translate
-
                          float newPositionX=(float)(delta.x+(mpointNew.x-mpointOld.x));
-                        //float  newPositionX=(float)(delta.x*ss/scale+(mpointNew.x-mpointOld.x)*(baseScale*ss)+(mpointNew.x)*(1-ss));
-
-
-                        if (newPositionX>0){newPositionX=0; }
-                       else if (newPositionX<getMaxDeltaWidth(ss/scale).x){newPositionX=getMaxDeltaWidth(ss/scale).x; }
+                            if (newPositionX-padding.x/2>0){newPositionX=padding.x/2; }
+                       else if (newPositionX+padding.x/2<getMaxDeltaWidth(ss/scale).x){newPositionX=getMaxDeltaWidth(ss/scale).x-padding.x/2; }
                         //end  check horizontal translate
 
                         // check vertical translate
                          float newPositionY=(float)(delta.y+(mpointNew.y-mpointOld.y));
-                       // float newPositionY=(float)(delta.y*ss/scale+(mpointNew.y-mpointOld.y)*(baseScale*ss)+(mpointNew.y)*(1-ss));
-                        if (newPositionY>0){newPositionY=0; }
-                       else if (newPositionY<getMaxDeltaWidth(ss/scale).y){newPositionY=getMaxDeltaWidth(ss/scale).y; }
+                            if (newPositionY-padding.y/2>0){newPositionY=padding.y/2; }
+                       else if (newPositionY+padding.y/2<getMaxDeltaWidth(ss/scale).y){newPositionY=getMaxDeltaWidth(ss/scale).y-padding.y/2; }
                         //end  check vertical translate
 
 
@@ -106,16 +112,13 @@ public MyZoom(Activity c, float scl, final Matrix startMatrix){
 
                 case MotionEvent.ACTION_MOVE:
 
+                    if (mode == DRAG) { action_on_MOVE_DROP(event,v); };
 
-                    if (mode == DRAG) {
-
-                        action_on_MOVE_DROP(event,v);
-
-                    };
                     if (mode == ZOOM) {
                         float newDist1 = spacing(event);
                         float scale1 =newDist1 / oldDist;
                         PointF mpointNew=midPoint(event);
+
 
 
                         //check scale
@@ -124,30 +127,25 @@ public MyZoom(Activity c, float scl, final Matrix startMatrix){
                         }else if (ss>(1/baseScale)){ ss=(float) (1/baseScale);
                         }
                         //end check scale
-                        //ss=(float) (scale1*scale); //!!!!!!!!
+                        PointF padding= getPadding(ss/scale);
 
-                        Log.d("ss/scale",""+ss/scale);
+                       // Log.d("ss/scale",""+ss/scale);
                         // check horizontal translate
-
-                        float newPositionX=(float)(delta.x+(mpointNew.x-mpointOld.x));        //*(baseScale*scale)
-                        //float  newPositionX=(float)(delta.x+(mpointNew.x-mpointOld.x)*(baseScale*ss)+(mpointNew.x)*(1-ss));
-                        //float  newPositionX=(float)(delta.x*(ss/scale));
-                        if (newPositionX>0){newPositionX=0; }
-                       else if (newPositionX<getMaxDeltaWidth(ss/scale).x){newPositionX=getMaxDeltaWidth(ss/scale).x; }
+                        float newPositionX=(float)(delta.x+(mpointNew.x-mpointOld.x));
+                        if (newPositionX-padding.x/2>0){newPositionX=padding.x/2; }
+                        if (newPositionX+padding.x/2<getMaxDeltaWidth(ss/scale).x){newPositionX=getMaxDeltaWidth(ss/scale).x-padding.x/2; }
                         //end  check horizontal translate
 
                         // check vertical translate
-                        float newPositionY=(float)(delta.y+(mpointNew.y-mpointOld.y));  //*(baseScale*scale)
-                       // float newPositionY=(float)(delta.y+(mpointNew.y-mpointOld.y)*(baseScale*ss)+(mpointNew.y)*(1-ss));
-                       // float newPositionY=(float)(delta.y*ss/scale);
-                        if (newPositionY>0){newPositionY=0; }
-                       else if (newPositionY<getMaxDeltaWidth(ss/scale).y){newPositionY=getMaxDeltaWidth(ss/scale).y; }
+                        float newPositionY=(float)(delta.y+(mpointNew.y-mpointOld.y));
+                        if (newPositionY-padding.y/2>0){newPositionY=padding.y/2; }
+                        if (newPositionY+padding.y/2<getMaxDeltaWidth(ss/scale).y){newPositionY=getMaxDeltaWidth(ss/scale).y-padding.y/2; }
                         //end  check vertical translate
 
 
 
                         Matrix matrixMove=new Matrix(matrix);
-                        matrixMove.postTranslate(newPositionX,newPositionY);          //+event.getX() - start.x
+                        matrixMove.postTranslate(newPositionX,newPositionY);
                         Matrix scaleMatrix=new Matrix(matrixMove);
                        // scaleMatrix.postTranslate(newPositionX,newPositionY);
 
@@ -159,28 +157,24 @@ public MyZoom(Activity c, float scl, final Matrix startMatrix){
 
 
                     }
-
-
-
                 break;
 
                 case MotionEvent.ACTION_POINTER_DOWN:  oldDist = spacing(event); mode = ZOOM; mpointOld=midPoint(event); break;
                 case MotionEvent.ACTION_UP:
 
                     if (mode==DRAG){
-
+                        PointF padding= getPadding(1);
                         double newPositionX= (delta.x+(event.getX() - start.x)/scale);
-                        if (newPositionX>0){newPositionX=0; }
-                        else if (newPositionX<getMaxDeltaWidth(1).x){newPositionX=getMaxDeltaWidth(1).x; }
+                        if (newPositionX-padding.x/2>0){newPositionX=padding.x/2; }
+                        if (newPositionX+padding.x/2<getMaxDeltaWidth(1).x){newPositionX=getMaxDeltaWidth(1).x-padding.x/2; }
 
                         double newPositionY= (delta.y+(event.getY() - start.y)/scale);
-                        if (newPositionY>0){newPositionY=0; }
-                       else if (newPositionY<getMaxDeltaWidth(1).y){newPositionY=getMaxDeltaWidth(1).y; }
+                        if (newPositionY-padding.y/2>0){newPositionY=padding.y/2; }
+                        if (newPositionY+padding.y/2<getMaxDeltaWidth(1).y){newPositionY=getMaxDeltaWidth(1).y-padding.y/2; }
 
                         delta.set((float) newPositionX, (float) (newPositionY));}
                     mode=NONE;
                     break;
-
             }
 
 
@@ -214,33 +208,33 @@ public MyZoom(Activity c, float scl, final Matrix startMatrix){
         int bitmapWidth= imageView.getDrawable().getIntrinsicWidth();
         int bitmapHeight= imageView.getDrawable().getIntrinsicHeight();
 
-        //if(bitmapWidth>bitmapHeight){int temp=bitmapWidth; bitmapWidth=bitmapHeight; bitmapHeight=temp;};
-
-        //res.x=imageViewWidth-Math.round(bitmapWidth*scaleL);
-       // Log.d("Scale",""+scale);     Log.d("baseScale",""+baseScale);    Log.d("baseScalebitmapWidth",""+bitmapWidth);
-
         res.x=imageViewWidth/(scale*addScale)-Math.round(bitmapWidth*baseScale);
-        Log.d("Scale res.x",""+res.x);
+        //Log.d("Scale res.x",""+res.x);
 
         res.y=imageViewHeight/(scale*addScale)-Math.round(bitmapHeight*baseScale);
-        Log.d("Scale res.y",""+res.y);
+       // Log.d("Scale res.y",""+res.y);
         return res;
     };
 
 void action_on_MOVE_DROP(MotionEvent event, View v){
     Matrix matrix = new Matrix(mtx);
+
+    PointF padding= getPadding(1);
     // check horizontal translate
     float newPositionX=(float) (delta.x+(event.getX() - start.x)/scale);
-    Log.d("newPositionX",""+newPositionX);  Log.d("newPositionX max",""+getMaxDeltaWidth(1).x);
-    if (newPositionX>0){newPositionX=0; }
-   else if (newPositionX<getMaxDeltaWidth(1).x){newPositionX=getMaxDeltaWidth(1).x; }
+   // Log.d("newPositionX",""+newPositionX);  Log.d("newPositionX max",""+getMaxDeltaWidth(1).x);
+
+
+
+    if ((newPositionX-padding.x/2)>0){newPositionX=padding.x/2; }
+    if (newPositionX+padding.x/2<getMaxDeltaWidth(1).x){newPositionX=getMaxDeltaWidth(1).x-padding.x/2; } //?!!
     //end  check horizontal translate
 
     // check vertical translate
     float newPositionY=(float) (delta.y+(event.getY() - start.y)/scale);
-    Log.d("newPositionY",""+newPositionY);
-    if (newPositionY>0){newPositionY=0; }
-   else if (newPositionY<(getMaxDeltaWidth(1).y)){newPositionY=getMaxDeltaWidth(1).y; }      ///
+   // Log.d("newPositionY",""+newPositionY);
+    if ((newPositionY-padding.y/2)>0){newPositionY=padding.y/2; }
+    if (newPositionY+padding.y/2<(getMaxDeltaWidth(1).y)){newPositionY=getMaxDeltaWidth(1).y-padding.y/2; }      ///
     //end  check vertical translate
 
 
@@ -255,6 +249,26 @@ void action_on_MOVE_DROP(MotionEvent event, View v){
 }
 
 
+PointF getPadding(float addScale ){
+    PointF currentPadding=new PointF(0,0);
+
+    ImageView imageView=(ImageView)  con.findViewById(R.id.image_view);
+    int imageViewWidth= ((View)imageView.getParent()) .getWidth();
+    int imageViewHeight= ((View)imageView.getParent()) .getHeight();
+
+    int bitmapWidth= imageView.getDrawable().getIntrinsicWidth();
+    int bitmapHeight= imageView.getDrawable().getIntrinsicHeight();
+
+    currentPadding.x=imageViewWidth/(scale*addScale)-Math.round(bitmapWidth*baseScale);
+ //   Log.d("getPadding",""+currentPadding.x);
+
+    currentPadding.y=imageViewHeight/(scale*addScale)-Math.round(bitmapHeight*baseScale);
+ //   Log.d("getPadding",""+currentPadding.y);
+
+    if(!(currentPadding.x>0)){currentPadding.x=0;}
+    if(!(currentPadding.y>0)){currentPadding.y=0;}
+    return currentPadding;
+}
 
 
 }

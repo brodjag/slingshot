@@ -68,7 +68,10 @@ public class listActivity extends Activity {
         DatabaseHelper dh=new DatabaseHelper(con);
          Cursor cursor=dh.getExpenseAll();
 
-        if(cursor.getCount()>0){  findViewById(R.id.scrollist).setVisibility(View.VISIBLE);findViewById(R.id.message_no_items).setVisibility(View.GONE); }
+        if(cursor.getCount()>0){
+
+            findViewById(R.id.scrollist).setVisibility(View.VISIBLE);findViewById(R.id.message_no_items).setVisibility(View.GONE);
+        }
 
         for (int i=0;i<cursor.getCount();i++){
             cursor.moveToPosition(i);
@@ -140,7 +143,9 @@ public class listActivity extends Activity {
                             dh.removeExpenseId(id);
 
                             Cursor c=dh.getExpenseAll();
-                            if(c.getCount()==0){  findViewById(R.id.scrollist).setVisibility(View.GONE);findViewById(R.id.message_no_items).setVisibility(View.VISIBLE); }
+                            if(c.getCount()==0){
+
+                                findViewById(R.id.scrollist).setVisibility(View.GONE);findViewById(R.id.message_no_items).setVisibility(View.VISIBLE); }
                             c.close();
                             dh.close();
                             removeImgFile(id);
@@ -201,9 +206,28 @@ public void setNormaItemlSize(){
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
+         inflater.inflate(R.menu.menu, menu);
+        DatabaseHelper dh=new DatabaseHelper(con);
+        Cursor c=dh.getExpenseAll();     int count=c.getCount();
+       // Log.d("c.getCount()","c.getCount()="+c.getCount());
+        if(count==0){menu.findItem(R.id.upload).setEnabled(false);}
+        c.close(); dh.close();
+
         return true;
     }
+
+    @Override
+    public boolean onPrepareOptionsMenu (Menu menu) {
+        DatabaseHelper dh=new DatabaseHelper(con);
+        Cursor c=dh.getExpenseAll();     int count=c.getCount();
+        // Log.d("c.getCount()","c.getCount()="+c.getCount());
+        if(count==0){menu.findItem(R.id.upload).setEnabled(false);}
+        c.close(); dh.close();
+        return true;
+    }
+
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent setting= new Intent(con,settingActivity.class);

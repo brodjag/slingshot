@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"  android:gravity="center"
+              android:layout_width="70dp"    android:layout_weight="1"
+              android:layout_height="wrap_content">
+
+
+<LinearLayout android:padding="5dp"
+              android:orientation="vertical"  android:gravity="center"
+              android:layout_width="70dp" android:layout_weight="1"
+              android:layout_height="wrap_content">
+
+    <LinearLayout android:layout_weight="1" android:id="@+id/tongue_hide" android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center" android:orientation="vertical" >
+        <LinearLayout android:layout_height="48dp" android:layout_width="45dp" android:background="@drawable/icon_bg_v2"/>
+        <TextView android:id="@+id/item_name" android:layout_height="wrap_content" android:layout_width="fill_parent" android:gravity="center" android:text="Airfare" android:textSize="12dp"/>
+    </LinearLayout>
+
+
+</LinearLayout>
+
+
+</LinearLayout>

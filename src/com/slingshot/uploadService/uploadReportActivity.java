@@ -1,7 +1,6 @@
 package com.slingshot.uploadService;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -9,7 +8,6 @@ import android.widget.EditText;
 import com.slingshot.R;
 import com.slingshot.add_expense_view.addExpensActivity;
 import com.slingshot.lib.fileLib;
-import com.slingshot.listActivity;
 
 /**
 Report for last upload expenses
@@ -38,7 +36,7 @@ public class uploadReportActivity extends Activity {
 
         if (keyCode == KeyEvent.KEYCODE_BACK) {
          finish();
-         startActivity(new Intent(this, listActivity.class));
+         //startActivity(new Intent(this, listActivity.class));
         }
         return super.onKeyDown(keyCode, event);
 

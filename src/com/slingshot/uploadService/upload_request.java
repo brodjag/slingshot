@@ -67,8 +67,8 @@ private class spinTask extends AsyncTask<Void,Integer,Element> {
         @Override
         protected Element doInBackground(Void... voids) {
             DatabaseHelper dh=new DatabaseHelper(con);
-            Cursor cursor=dh.getExpenseAll();
-
+            //Cursor cursor=dh.getExpenseAll();
+            Cursor cursor=dh.getExpenseAllBackOrder();
 
             for (int i=0; i<cursor.getCount(); i++){
                 cursor.moveToPosition(i);
@@ -135,7 +135,7 @@ private class spinTask extends AsyncTask<Void,Integer,Element> {
         protected void onProgressUpdate(Integer... value)
         {
             dialog.setProgress(value[0]);
-            dialog.setProgressNumberFormat("");
+          //  dialog.setProgressNumberFormat("");
             super.onProgressUpdate(value);
 
             //remove item from list view

@@ -141,8 +141,18 @@ public   addExpenseHelp(Activity c,String id_expense){
 
 
     public void cleanTemp(){
+        File f0 = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActivity.mainFolder);
+        if(!f0.exists()){f0.mkdir();return;}
+
+        File f1 = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActivity.mainFolder+"/imgs/");
+        if(!f1.exists()){f1.mkdir(); return;}
+
+
+
+
+
         File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActivity.mainFolder+"/imgs/"+ get_id_expense());
-       if(!file.exists()){file.mkdir();}
+       if(!file.exists()){file.mkdir(); return;}
       //  File tmpFolder= new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+addExpensActivity.mainFolder+"/imgs/"+  "temp");
         File[] files= file.listFiles();
         for(int i=0; i<files.length; i++){

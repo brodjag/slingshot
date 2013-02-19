@@ -253,7 +253,8 @@ void setImg(){
              Log.d("imageView.getWidth()/ b.getWidth();", ""+(float) imageView.getWidth()/optionsG.outWidth) ;
             float scaleX= (float) ((View) imageView.getParent()).getWidth()/optionsG.outWidth;
             float scaleY= (float) ((View) imageView.getParent()).getHeight()/optionsG.outHeight;
-           if(scaleX>scaleY){scale=scaleX;}else {scale = scaleY;}
+           // if(scaleX>scaleY){scale=scaleX;}else {scale = scaleY;}
+            if(scaleX<scaleY){scale=scaleX;}else {scale = scaleY;}
             //scale= (float)dpToPx(320)/b.getWidth();
             (imageView).setImageBitmap(b);
             Log.d("scale=",""+scale);

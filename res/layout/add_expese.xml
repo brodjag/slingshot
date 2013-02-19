@@ -1,68 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-           android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="fill_parent" android:layout_height="fill_parent">
+<LinearLayout   android:layout_width="fill_parent" android:background="@drawable/background2" android:layout_height="fill_parent" android:orientation="vertical">
 
+
+
+                                               <!--head_bg_v2 -->
     <!--head -->
-    <LinearLayout android:background="#aaa" android:orientation="horizontal" android:layout_height="50dp" android:layout_width="fill_parent">
+    <LinearLayout android:background="@drawable/head_bg_v3" android:orientation="horizontal" android:layout_height="74dp" android:paddingBottom="13dp" android:layout_width="fill_parent">
 
-        <LinearLayout android:id="@+id/save"   android:layout_width="50dp" android:layout_height="50dp" android:gravity="center">
-            <LinearLayout android:background="@drawable/done"   android:text="" android:layout_height="30dp"  android:layout_width="30dp" android:layout_marginLeft="5dp" />
-                      <!--@drawable/done -->
+        <LinearLayout android:id="@+id/delete" android:background="@drawable/delete_v2"   android:text="" android:layout_height="61dp"  android:layout_width="51dp" android:layout_marginLeft="5dp" />
+
+        <LinearLayout android:visibility="gone" android:id="@+id/new1"  android:layout_width="50dp" android:layout_height="50dp" android:gravity="center">
+            <LinearLayout    android:background="@drawable/new1"  android:layout_height="30dp"  android:layout_width="30dp" android:layout_marginRight="5dp"  android:padding="0dp" />
         </LinearLayout>
 
-    <TextView android:id="@+id/title_edit_expense"  android:textColor="#000" android:gravity="center" android:textSize="18dp" android:textStyle="bold"
+                      <!--@drawable/done -->
+
+    <TextView android:id="@+id/title_edit_expense"  android:textColor="#3dbdff" android:gravity="center" android:textSize="24dp" android:textStyle="bold"
                    android:layout_height="fill_parent" android:layout_width="fill_parent"  android:layout_weight="1" android:text="Edit expense" />
 
 
-       <LinearLayout android:id="@+id/new1"  android:layout_width="50dp" android:layout_height="50dp" android:gravity="center">
-            <LinearLayout    android:background="@drawable/new1"  android:layout_height="30dp"  android:layout_width="30dp" android:layout_marginRight="5dp"  android:padding="0dp" />
-       </LinearLayout>
+
+        <LinearLayout android:id="@+id/save" android:background="@drawable/save_v2"  android:layout_height="61dp"  android:layout_width="51dp" android:layout_marginLeft="5dp" />
     </LinearLayout>
     <!-- end head -->
 
+
     <ScrollView android:layout_weight="1" android:layout_width="fill_parent" android:layout_height="fill_parent">
 
-    <LinearLayout android:layout_marginTop="10dp" android:orientation="vertical" android:layout_height="wrap_content"
+    <LinearLayout android:layout_marginTop="10dp" android:orientation="horizontal" android:layout_height="wrap_content"
                   android:layout_width="fill_parent">
-        <!--type & date -->
-        <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:orientation="horizontal">
-            <Spinner android:id="@+id/spinner" android:layout_weight="1" android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_margin="5dp" android:drawSelectorOnTop="true" android:prompt="@string/Select_expense_code" />
-            <Button android:id="@+id/select_date" android:text="26.12.2012" android:layout_height="fill_parent" android:layout_width="100dp" android:layout_margin="5dp"/>
+
+        <!-- left tab-->
+         <LinearLayout android:layout_width="70dp" android:layout_height="wrap_content" android:orientation="vertical">
+
+
+             <LinearLayout android:id="@+id/show_tongue" android:layout_width="fill_parent" android:layout_height="wrap_content" android:gravity="center" android:orientation="vertical" android:layout_margin="5dp" >
+             <LinearLayout android:layout_height="48dp" android:layout_width="45dp" android:background="@drawable/icon_bg_v2"/>
+             <TextView android:id="@+id/selected_expense_code_name" android:layout_height="wrap_content" android:layout_width="fill_parent" android:gravity="center" android:text="Airfare" android:textSize="12dp"/>
+             </LinearLayout>
+
+          <!--   <Spinner android:id="@+id/spinner" android:layout_weight="1" android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_margin="5dp" android:drawSelectorOnTop="true" android:prompt="@string/Select_expense_code" /> -->
+
+             <!--img viewer contaner -->
+             <RelativeLayout  android:id="@+id/add_expence_img_list" android:layout_height="wrap_content" android:layout_marginTop="40dp"
+                           android:layout_width="fill_parent" android:gravity="right">
+
+                 <LinearLayout android:id="@+id/add_img" android:background="@drawable/camera2" android:layout_margin="10dp" android:layout_height="45dp"
+                               android:layout_width="45dp"   android:text="Images"/>
+
+
+                 <TextView android:id="@+id/img_count" android:background="@drawable/buble" android:layout_marginLeft="40dp"  android:textColor="#fff" android:gravity="center" android:textSize="10dp" android:textStyle="bold"
+                           android:layout_height="23dp" android:layout_width="23dp"  android:text="11" android:padding="3dp" />
+
+                 <TextView android:textSize="12dp" android:layout_marginTop="55dp"  android:layout_width="65dp" android:gravity="center" android:layout_height="wrap_content" android:text="Images"/>
+             </RelativeLayout>
+             <!--end img viewer contaner -->
+
+
+         </LinearLayout>
+        <!-- ens left tab -->
+
+         <!--rite tab -->
+        <LinearLayout android:layout_height="wrap_content" android:layout_width="1dp" android:layout_weight="1" android:orientation="vertical">
+
+
+             <Button android:background="@drawable/select_date_bg" android:id="@+id/select_date" android:text="26.12.2012" android:layout_height="42dp" android:layout_width="fill_parent" android:layout_margin="5dp"/>
+            <EditText android:background="@drawable/select_date_bg" android:paddingLeft="10dp" android:singleLine="true" android:id="@+id/amount" android:layout_margin="5dp" android:layout_width="fill_parent" android:layout_height="42dp"
+                      android:hint="0.0 USD" android:inputType="numberDecimal" />
+
+            <EditText android:id="@+id/description" android:singleLine="false" android:lines="4" android:minLines="2" android:maxLines="5" android:scrollbars="vertical" android:layout_margin="5dp" android:layout_width="fill_parent"  android:layout_height="100dp" android:gravity="top"
+                          android:hint="Expense Description." android:inputType="textMultiLine" />
+
         </LinearLayout>
-        <!--end type & date -->
-
-        <!--descraption & amount -->
-        <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:orientation="horizontal">
-            <EditText android:id="@+id/description" android:layout_margin="5dp" android:layout_width="1dp" android:layout_weight="1" android:layout_height="wrap_content"
-                      android:hint="description" android:inputType="textCapSentences" />
-            <EditText android:singleLine="false" android:id="@+id/amount" android:layout_margin="5dp" android:layout_width="100dp" android:layout_height="wrap_content"
-                      android:hint="amount" android:inputType="numberDecimal" />
-        </LinearLayout>
-        <!--end descraption & amount -->
+        <!--end rite tab -->
 
 
-         <!--img viewr contaner -->
-
-        <LinearLayout android:orientation="horizontal" android:id="@+id/add_expence_img_list" android:layout_height="wrap_content"
-                      android:layout_width="fill_parent" android:gravity="center">
-
-        <LinearLayout android:id="@+id/add_img" android:background="@drawable/camera2" android:layout_margin="5dp" android:layout_height="50dp"
-                android:layout_width="50dp"   android:text="Images">
-
-
-            <TextView android:id="@+id/img_count" android:background="#f22"  android:textColor="#fff" android:gravity="center" android:textSize="10dp" android:textStyle="bold"
-                      android:layout_height="wrap_content" android:layout_width="wrap_content"  android:text="11" android:padding="3dp" />
-
-
-        </LinearLayout>
-            <!--end img viewr contaner -->
-            <!--
-        <Button android:visibility="gone" android:id="@+id/add_img" android:layout_margin="5dp" android:layout_height="wrap_content"
-                android:layout_width="fill_parent" android:text="add image"/>
-
-          -->
-        </LinearLayout>
 
 
 
@@ -79,3 +93,67 @@
 
 
 </LinearLayout>
+
+    <!--tongue perent VERTICAL -->
+    <LinearLayout android:visibility="gone" android:id="@+id/tongue_perent"  android:orientation="vertical" android:paddingTop="63dp"
+                  android:layout_width="fill_parent" android:layout_height="fill_parent" android:gravity="center_horizontal" >
+    <!--visible tongue -->
+   <LinearLayout android:id="@+id/tongue" android:layout_width="fill_parent" android:layout_height="fill_parent" android:gravity="center_horizontal" >
+    <LinearLayout android:orientation="vertical" android:paddingBottom="15dp"  android:layout_height="300dp" android:layout_width="280dp" android:background="@drawable/tongue_big_bg" >
+        <LinearLayout android:layout_width="fill_parent" android:layout_height="20dp"  />
+
+
+
+        <LinearLayout  android:orientation="vertical" android:layout_height="1dp" android:layout_weight="1" android:layout_width="fill_parent"  >
+            <TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Select Expense Code" android:gravity="center" android:textSize="19dp" android:textStyle="bold" android:textColor="#fff" />
+
+
+            <ScrollView android:layout_height="fill_parent" android:layout_width="fill_parent">
+                <LinearLayout android:id="@+id/tongue_list"  android:padding="5dp" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content">
+
+
+
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+    </LinearLayout>
+
+    </LinearLayout>
+    <!--end tongue parent VERTICAL -->
+
+
+    <!--tongue perent Horisontal -->
+    <LinearLayout android:visibility="gone" android:id="@+id/tongue_perent_hr"  android:orientation="vertical" android:paddingTop="63dp" android:layout_width="fill_parent" android:layout_height="fill_parent" android:gravity="center_horizontal" >
+        <LinearLayout android:id="@+id/tongue_hr" android:layout_width="fill_parent" android:layout_height="fill_parent" android:gravity="center_horizontal" >
+            <LinearLayout android:orientation="vertical" android:paddingBottom="15dp"    android:layout_height="225dp" android:layout_width="420dp" android:background="@drawable/tongue_big_bg" >
+                <LinearLayout android:layout_width="fill_parent" android:layout_height="20dp"  />
+
+
+
+                <LinearLayout  android:orientation="vertical" android:layout_height="1dp" android:layout_weight="1" android:layout_width="fill_parent"  >
+                    <TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="Select Expense Code"
+                              android:gravity="center" android:textSize="19dp" android:textStyle="bold" android:textColor="#fff" />
+
+
+                    <ScrollView android:layout_height="fill_parent" android:layout_width="fill_parent">
+                        <LinearLayout android:id="@+id/tongue_list_hr"  android:padding="5dp" android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content">
+
+
+
+                        </LinearLayout>
+                    </ScrollView>
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+    <!--end tongue parent VERTICAL -->
+
+</RelativeLayout>

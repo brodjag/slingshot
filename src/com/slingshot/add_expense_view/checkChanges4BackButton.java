@@ -22,6 +22,19 @@ public class checkChanges4BackButton {
     }
 
 public boolean isChanged(){
+    if(con.id_expense.equals("0")){
+        //if (con.isSpinerSelected>1){return true;}    //if new expanse and nothin
+
+        //check desckription
+        String descNew=((TextView) con.findViewById(R.id.description)).getText().toString();
+        if(!descNew.equals("")){return true;}
+
+        //check amount
+        String amountNew=((TextView) con.findViewById(R.id.amount)).getText().toString();
+        if(!amountNew.equals("")){return true;}
+
+        return false;
+    }
 
     //check tmp files
     File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ addExpensActivity.mainFolder+"/imgs/"+con.EHelper.get_id_expense());

@@ -12,8 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.slingshot.lib.DatabaseHelper;
 import com.slingshot.lib.fileLib;
+import com.slingshot.lib.saveFile;
 import com.slingshot.lib.soap;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 public class SplashScreenActivity extends Activity {
 
@@ -103,8 +105,28 @@ public class SplashScreenActivity extends Activity {
 
                 }
             }else {
-                //Toast.makeText(con, "chek net (activity)", Toast.LENGTH_SHORT).show();
-                showDailog("Error connecting to server ");
+                try {
+                    saveFile sf=new saveFile(con);
+                    sf.readXmlFile("ExpenseCodes.xml");
+                    Element el= sf.readXmlFile("ExpenseCodes.xml");
+                    if(el!=null){
+                        Element body1=(Element) el.getElementsByTagName("soap:Body").item(0);
+                        Element GetExpenseCodesResponse=(Element)  (body1).getElementsByTagName("GetExpenseCodesResponse").item(0);
+                        Element GetExpenseCodesResult=(Element) (GetExpenseCodesResponse).getElementsByTagName("GetExpenseCodesResult").item(0);
+                        String Code= GetExpenseCodesResult.getElementsByTagName("Code").item(0).getFirstChild().getNodeValue().toString();
+                        NodeList ExpenseCodes=((Element)GetExpenseCodesResult.getElementsByTagName("ExpenseCodes").item(0)).getElementsByTagName("string");
+
+                        if (Code.equals("Success")){
+                            Toast.makeText(con,"Error connection to server. Use cached Expense codes",Toast.LENGTH_LONG).show();
+                            startActivity(new Intent(con,listActivity.class));
+                            finish();
+                        }else {
+                            String message =GetExpenseCodesResult.getElementsByTagName("Message").item(0).getFirstChild().getNodeValue().toString();
+                            showDailog(message);
+                        }
+                    }else { showDailog("Error connecting to server ");}
+                }catch (Exception e){showDailog("Error connecting to server ");}
+
 
             }
         }

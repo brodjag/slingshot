@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,17 +18,12 @@ import com.slingshot.R;
 import com.slingshot.imageView.ImgStarter;
 import com.slingshot.lib.DatabaseHelper;
 import com.slingshot.lib.fileLib;
-import com.slingshot.lib.saveFile;
 import com.slingshot.listActivity;
 import com.slingshot.vetch.ancal.Prefs;
 import com.slingshot.vetch.widgets.DateWidget;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,11 +34,13 @@ import java.util.List;
  */
 public class addExpensActivity extends Activity  {
     Activity con;
-    String id_expense="0";
-public static  String mainFolder="slingshot";
+    public String id_expense="0";
+    public static  String mainFolder="slingshot";
     String fileName="1.jpg";
     Calendar dateStart=Calendar.getInstance();
     String ExpenseCode ="";
+
+    //public     int isSpinerSelected=0;   //true when spiner changed
 
 
     @Override
@@ -62,7 +60,8 @@ public static  String mainFolder="slingshot";
 
         fileName=EHelper.getFileName();
         setContentView(R.layout.add_expese);
-       initSpiner();
+      // initSpiner();
+        new tongue(this);
         setButtons();
         setValues();
     }
@@ -71,6 +70,56 @@ public static  String mainFolder="slingshot";
 
     private void setButtons() {
         EHelper=new addExpenseHelp(con,id_expense);
+
+        //remove item
+        con.findViewById(R.id.delete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {     ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50); } catch (Exception e) {}
+                if(!fileLib.isSDCardMounted()){Toast.makeText(con,"Cd card isn't connected", Toast.LENGTH_LONG).show(); return;}
+
+                final AlertDialog.Builder dlgAlert = new AlertDialog.Builder(con);
+
+                String desc=((EditText)con.findViewById(R.id.description)).getText().toString();
+                dlgAlert.setMessage("Remove "+ExpenseCode+" '" + desc + "'?");
+                //dlgAlert.setTitle("App Title");
+                dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        try {
+                            ((Vibrator) con.getSystemService(con.VIBRATOR_SERVICE)).vibrate(50);
+                        } catch (Exception e) {
+                        }
+                        DatabaseHelper dh = new DatabaseHelper(con);
+                        dh.removeExpenseId(id_expense);
+
+                        Cursor c = dh.getExpenseAll();
+                        if (c.getCount() == 0) {
+
+                            findViewById(R.id.scrollist).setVisibility(View.GONE);
+                            findViewById(R.id.message_no_items).setVisibility(View.VISIBLE);
+                        }
+                        c.close();
+                        dh.close();
+                        listActivity.removeImgFile(id_expense);
+                        con.finish();
+                        startActivity(new Intent(con, listActivity.class));
+                        // ((ViewManager) v.getParent()).removeView(v);
+                    }
+                });
+                dlgAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                dlgAlert.setCancelable(true);
+                dlgAlert.create().show();
+
+                //   ((ViewManager) v.getParent()).removeView(v);
+            }
+        });
+
 
         findViewById(R.id.select_date).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,14 +201,15 @@ public static  String mainFolder="slingshot";
 
 
     //select expense Code spiner
+    /*
     List<String> spinerItems;
     private void initSpiner() {
         saveFile sf=new saveFile(con);
         Element el= sf.readXmlFile("ExpenseCodes.xml");
         Element body=(Element) el.getElementsByTagName("soap:Body").item(0);
         Element GetExpenseCodesResponse=(Element)  (body).getElementsByTagName("GetExpenseCodesResponse").item(0);
-      Element GetExpenseCodesResult=(Element) (GetExpenseCodesResponse).getElementsByTagName("GetExpenseCodesResult").item(0);
-       String Code= GetExpenseCodesResult.getElementsByTagName("Code").item(0).getFirstChild().getNodeValue().toString();
+        Element GetExpenseCodesResult=(Element) (GetExpenseCodesResponse).getElementsByTagName("GetExpenseCodesResult").item(0);
+        String Code= GetExpenseCodesResult.getElementsByTagName("Code").item(0).getFirstChild().getNodeValue().toString();
         NodeList ExpenseCodes=((Element)GetExpenseCodesResult.getElementsByTagName("ExpenseCodes").item(0)).getElementsByTagName("string");
          spinerItems=new ArrayList<String>() ;
         for(int i=0; i<ExpenseCodes.getLength(); i++){
@@ -175,15 +225,20 @@ public static  String mainFolder="slingshot";
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 addExpensActivity.this.ExpenseCode = spinerItems.get(i);
-                Toast.makeText(con, addExpensActivity.this.ExpenseCode,Toast.LENGTH_SHORT).show();
+                isSpinerSelected++;
+               // Toast.makeText(con,"selected !!!",Toast.LENGTH_LONG).show();
+                Log.d("selected","!!! isSpinerSelected=="+isSpinerSelected);
+               // Toast.makeText(con, addExpensActivity.this.ExpenseCode,Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+                   Toast.makeText(con,"nothink !!!",Toast.LENGTH_LONG).show();
             }
         });
+
     }
+    */
     //end select expense Code spiner
 
 
@@ -237,17 +292,27 @@ public static  String mainFolder="slingshot";
     //set values from DB to View
     private void setValues() {
         if (id_expense.equals("0")) {
+            findViewById(R.id.delete).setVisibility(View.INVISIBLE);
+
             ((TextView)findViewById(R.id.title_edit_expense)).setText("New Expense");
-            setDateOnButton(); return;
+            setDateOnButton();
+            // ((Spinner) findViewById(R.id.spinner)).performClick();
+            con.findViewById(R.id.tongue_perent).setVisibility(View.VISIBLE);
+            return;
         }
         DatabaseHelper dh=new DatabaseHelper(con);
         Cursor c=dh.getExpenseById(id_expense);
 
         //set spiner
+
+
         String code= c.getString(1);//!!!
+        /*
         for(int i=0; i<spinerItems.size();i++){
          if(spinerItems.get(i).equals(code)){ ((Spinner) findViewById(R.id.spinner)).setSelection(i);}
-        }
+        }      */
+        ((TextView) findViewById(R.id.selected_expense_code_name)).setText(code);
+
         ExpenseCode=code;
 
         Long dateMS=c.getLong(2);
@@ -324,6 +389,23 @@ public static  String mainFolder="slingshot";
         return super.onKeyDown(keyCode, event);
 
 
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if((con.findViewById(R.id.tongue_perent).getVisibility()==View.VISIBLE)||(con.findViewById(R.id.tongue_perent_hr).getVisibility()==View.VISIBLE)) {
+
+            int orientation = con.getResources().getConfiguration().orientation;
+            if (orientation== Configuration.ORIENTATION_PORTRAIT){
+                con.findViewById(R.id.tongue_perent).setVisibility(View.VISIBLE);
+                con.findViewById(R.id.tongue_perent_hr).setVisibility(View.GONE);
+            }else {
+                con.findViewById(R.id.tongue_perent_hr).setVisibility(View.VISIBLE);
+                con.findViewById(R.id.tongue_perent).setVisibility(View.GONE);
+            }
+        }
     }
 
 
